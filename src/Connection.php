@@ -1,4 +1,12 @@
 <?php
+/**
+ * @author    Mohammad Emran <memran.dhk@gmail.com>
+ * @copyright 2018
+ *
+ * @see      https://www.github.com/memran
+ * @see      http://www.memran.me
+ **/
+
 namespace MarwaDB;
 
 use PDO;
@@ -54,6 +62,7 @@ class Connection implements ConnectionInterface
 				throw new NotFoundException('PDO extension is not loaded');
 		}
 
+		//check Database config exists
 		if(is_null($dbConfig))
 		{
 			throw new ArrayNotFoundException("Database Configuration Array");
@@ -187,7 +196,6 @@ class Connection implements ConnectionInterface
 	 * @param   $paramname description
 	 * @return  String description
 	 * */
-
 	private function buildDSN($config)
 	{
 			$dsn = $config['driver'].":host=".$config['host'].";dbname=".$config["database"];

@@ -1,7 +1,12 @@
 <?PHP
-
+/**
+ * @author    Mohammad Emran <memran.dhk@gmail.com>
+ * @copyright 2018
+ *
+ * @see      https://www.github.com/memran
+ * @see      http://www.memran.me
+ **/
 namespace MarwaDB;
-
 
 use MarwaDB\WhereSqlTrait;
 use MarwaDB\Exceptions\ArrayNotFoundException;
@@ -184,10 +189,7 @@ class SelectSql
 	{
 		$this->sqlString();
 
-		 dump($this->sql_query);
-		 //dump($this->placeHolders);
-
-		 //if Database object is not null then execute query
+	   //if Database object is not null then execute query
 		if(!is_null($this->db))
 		{
 
@@ -208,7 +210,13 @@ class SelectSql
 	 * */
 	public function orderByRaw($columns="*")
 	{
-		$this->orderSql = ' ORDER BY '.$columns;
+		//check if columns is null
+		if(is_null($columns))
+		{
+			throw new Exception("Parameter must be string");
+		}
+		$whereFormat=' ORDER BY %s';
+		$this->orderSql = sprintf($whereFormat,$columns);
 		return $this;
 	}
 
@@ -219,6 +227,11 @@ class SelectSql
 	 * */
     public function havingRaw($columns="*")
 	{
+		//check if columns is null
+		if(is_null($columns))
+		{
+			throw new Exception("Parameter must be string");
+		}
 		$whereFormat=' HAVING %s';
 		$this->havingSql = sprintf($whereFormat,$columns);
 		return $this;
@@ -231,7 +244,19 @@ class SelectSql
 	 * */
 	public function orderBy($colName,$sortBy='ASC')
 	{
-		$colSql=$colName.' '.$sortBy;
+		//check if colName is null
+		if(is_null($colName))
+		{
+			throw new Exception("Parameter must be string");
+		}
+
+		$sortArray=['ASC','DESC','RAND'];
+
+		if(!in_array($sortBy,$sortArray))
+		{
+			throw new Exception("Sort By key is not valid");
+		}
+		$colSql="{$colName} {$sortBy}";
 		$this->orderByRaw($colSql);
 		return $this;
 	}
@@ -242,7 +267,12 @@ class SelectSql
 	 * */
 	public function groupBy($colName)
 	{
-		$this->groupSql = ' GROUP BY '.$colName;
+		//check if colName is null
+		if(is_null($colName))
+		{
+			throw new Exception("Parameter must be string");
+		}
+		$this->groupSql = ' GROUP BY {$colName}';
 		return $this;
 	}
 
@@ -302,7 +332,7 @@ class SelectSql
 	{
 		if(!is_null($offset))
 		{
-			$this->offset = ' OFFSET '.$offset;
+			$this->offset = ' OFFSET {$offset}';
 		}
 
 		return $this;
@@ -315,7 +345,7 @@ class SelectSql
 	 * */
 	public function limit($limit=50)
 	{
-		$this->orderSql = ' LIMIT '.$limit;
+		$this->orderSql = ' LIMIT {$limit}';
 		if(!is_null($this->offset))
 		{
 			$this->orderSql.=$this->offset;
@@ -324,5 +354,11 @@ class SelectSql
 		return $this;
 	}
 
+	public function escape($str)
+	{
+		$str=trim($str);
+		$str=str_replace(array('"',"'","\\"), '', $str);
+		return $str;
+	}
 }
 ?>
