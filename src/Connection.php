@@ -10,7 +10,7 @@
 namespace MarwaDB;
 
 use PDO;
-use MarwaDB\Exceptions\NotFoundException;
+use MarwaDB\Exceptions\{NotFoundException,ArrayNotFoundException};
 use MarwaDB\ConnectionInterface;
 
 class Connection implements ConnectionInterface
