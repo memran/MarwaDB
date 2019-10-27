@@ -6,7 +6,6 @@
  * @see      https://www.github.com/memran
  * @see      http://www.memran.me
  **/
-
 namespace MarwaDB;
 
 use PDO;
@@ -65,7 +64,7 @@ class Connection implements ConnectionInterface
 		//check Database config exists
 		if(is_null($dbConfig))
 		{
-			throw new ArrayNotFoundException("Database Configuration Array");
+				throw new ArrayNotFoundException("Database Configuration Array");
 		}
 		$this->validateAndBuild($dbConfig);
 
