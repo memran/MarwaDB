@@ -332,7 +332,7 @@ class SelectSql
 	{
 		if(!is_null($offset))
 		{
-			$this->offset = ' OFFSET {$offset}';
+			$this->offset = " OFFSET {$offset}";
 		}
 
 		return $this;
@@ -345,7 +345,7 @@ class SelectSql
 	 * */
 	public function limit($limit=50)
 	{
-		$this->orderSql = ' LIMIT {$limit}';
+		$this->orderSql = " LIMIT {$limit}";
 		if(!is_null($this->offset))
 		{
 			$this->orderSql.=$this->offset;
