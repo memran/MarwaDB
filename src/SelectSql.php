@@ -52,7 +52,7 @@ class SelectSql
 	 * @param   string $table description
 	 * @param Array $columns description
 	 * */
-	public function __construct($db,$table,$columns,$disableAddTable=false)
+	public function __construct($db,$table,$columns)
 	{
 		//assign database
 		$this->db=$db;
@@ -67,14 +67,13 @@ class SelectSql
 			foreach($columns as $k => $v)
 			{
 				$tabSql = "";
-				if(!$disableAddTable)
-				{
-					$tabSql = $this->table.".".$v;
-				}
-				else
-				{
-					$tabSql =$v;
-				}
+        if (strpos($v, '.') !== false) {
+        	$tabSql = $this->table.".".$v;
+        }
+        else //add the table name and push to arary
+        {
+          $tabSql =$v;
+        }
 
 				array_push($this->selectQuery,$tabSql);
 			}
@@ -95,8 +94,15 @@ class SelectSql
 	{
 		if(!is_null($this->selectQuery))
 		{
-			//$this->selectQuery.=",".$this->table.".".$columns;
-			array_push($this->selectQuery,$this->table.".".$columns);
+			//check if string contains "as" then donot add table name
+      if (strpos($columns, '.') !== false) {
+        array_push($this->selectQuery,$columns);
+      }
+      else //add the table name and push to arary
+      {
+        array_push($this->selectQuery,$this->table.".".$columns);
+      }
+
 		}
 
 		return $this;
@@ -141,19 +147,20 @@ class SelectSql
 		 //check whereSql
 		 if(!is_null($this->whereSql))
 		 {
-		 	$this->sql_query .= $this->whereSql;
+        //concat wheresql to the main sql
+        $this->sql_query .= $this->whereSql;
 
-		 	//check if not null whereOrSql
-		 	if(!is_null($this->whereOrSql))
-			 {
-			 	$this->sql_query .= $this->whereOrSql;
-			 }
+  		 	//check if not null whereOrSql
+  		 	if(!is_null($this->whereOrSql))
+  			 {
+  			 	    $this->sql_query .= $this->whereOrSql;
+  			 }
 			 //check if not null whereAndSql
 			 if(!is_null($this->whereAndSql))
 			 {
-			 	$this->sql_query .= $this->whereAndSql;
+			 	    $this->sql_query .= $this->whereAndSql;
 			 }
-		 }
+	    }
 
 		 //checking if not null havingSql
 		 if(!is_null($this->havingSql))
@@ -169,7 +176,7 @@ class SelectSql
 		 //check Order Sql
 		 if(!is_null($this->orderSql))
 		 {
-		 	$this->sql_query .= $this->orderSql;
+	 	   $this->sql_query .= $this->orderSql;
 		 }
 
 		 //check limitSql
@@ -177,6 +184,7 @@ class SelectSql
 		 {
 		 	$this->sql_query .= $this->limitSql;
 		 }
+
 		 return $this->sql_query;
 
 	}
@@ -187,13 +195,13 @@ class SelectSql
 	 * */
 	public function get()
 	{
+
 		$this->sqlString();
 
-	   //if Database object is not null then execute query
+	  //if Database object is not null then execute query
 		if(!is_null($this->db))
 		{
-
-			$result = $this->db->rawQuery($this->sql_query,$this->placeHolders);
+  		$result = $this->db->rawQuery($this->sql_query,$this->placeHolders);
 			return $result;
 		}
 		else
@@ -208,15 +216,16 @@ class SelectSql
 	 * @param  string $columns description
 	 * @return  $this description
 	 * */
-	public function orderByRaw($columns="*")
+	public function orderByRaw(string $columns)
 	{
 		//check if columns is null
 		if(is_null($columns))
 		{
-			throw new Exception("Parameter must be string");
+			throw new Exception("Order by parameter is null");
 		}
-		$whereFormat=' ORDER BY %s';
-		$this->orderSql = sprintf($whereFormat,$columns);
+    $this->orderSql = " ORDER BY {$columns}";
+    //$whereFormat=' ORDER BY ?';
+		//$this->orderSql = sprintf($whereFormat,$columns);
 		return $this;
 	}
 
@@ -225,10 +234,10 @@ class SelectSql
 	 * @param  string $columns description
 	 * @return  $this description
 	 * */
-    public function havingRaw($columns="*")
+  public function havingRaw(string $columns="*")
 	{
 		//check if columns is null
-		if(is_null($columns))
+		if(is_null($columns) OR is_array($columns))
 		{
 			throw new Exception("Parameter must be string");
 		}
@@ -242,37 +251,54 @@ class SelectSql
 	 * @param   $colName description
 	 * @param   $sortBy description
 	 * */
-	public function orderBy($colName,$sortBy='ASC')
+	public function orderBy(string $colName,$sortBy='ASC')
 	{
 		//check if colName is null
 		if(is_null($colName))
 		{
-			throw new Exception("Parameter must be string");
+			throw new Exception("Orderby column name must be string");
 		}
 
 		$sortArray=['ASC','DESC','RAND'];
+    $colSql ='';
 
 		if(!in_array($sortBy,$sortArray))
 		{
 			throw new Exception("Sort By key is not valid");
 		}
-		$colSql="{$colName} {$sortBy}";
+
+    if (strpos($colName, '.') !== false) {
+    	$colSql="{$colName} {$sortBy}";
+    }
+    else //add the table name
+    {
+      $colSql=$this->table.".{$colName} {$sortBy}";
+    }
 		$this->orderByRaw($colSql);
 		return $this;
 	}
+
 	/**
 	 * function for groupBy
 	 * @param  string $columns description
 	 * @return  $this description
 	 * */
-	public function groupBy($colName)
+	public function groupBy(string $colName)
 	{
 		//check if colName is null
 		if(is_null($colName))
 		{
 			throw new Exception("Parameter must be string");
 		}
-		$this->groupSql = ' GROUP BY {$colName}';
+
+    if (strpos($colName, '.') !== false) {
+    	$this->groupSql = " GROUP BY {$colName}";
+    }
+    else //add the table name
+    {
+      $this->groupSql = " GROUP BY {$this->table}.{$colName}";
+    }
+
 		return $this;
 	}
 
@@ -284,12 +310,29 @@ class SelectSql
 	 * @param   $col2 description
 	 * @return  $this description
 	 * */
-	public function join($table,$col1,$operator,$col2)
+	public function join($jointable,$joinCol,$operator,$local,$type='INNER')
 	{
 		//INNER JOIN Customers ON Orders.CustomerID=Customers.CustomerID;
-		$joinFormat=" INNER JOIN %s ON %s %s %s";
-		$this->joinSql .= sprintf($joinFormat,$table,$col1,$operator,$col2);
+		$joinFormat=" {$type} JOIN %s ON %s %s %s";
 
+    //check local table has dot or not
+    if (strpos($local, '.') !== false) {
+      $localCol = $local;
+    }
+    else //add the table name
+    {
+        $localCol = "{$this->table}.{$local}";
+    }
+
+    //check join column has dot or not
+    if (strpos($joinCol, '.') !== false) {
+      $joinRef = $joinCol;
+    }
+    else //add the table name
+    {
+        $joinRef = "{$jointable}.{$joinCol}";
+    }
+		$this->joinSql .= sprintf($joinFormat,$jointable,$joinRef,$operator,$local);
 		return $this;
 	}
 	/**
@@ -302,9 +345,10 @@ class SelectSql
 	 * */
 	public function leftJoin($table,$col1,$operator,$col2)
 	{
-		//INNER JOIN Customers ON Orders.CustomerID=Customers.CustomerID;
-		$joinFormat=" LEFT JOIN %s ON %s %s %s";
-		$this->joinSql .= sprintf($joinFormat,$table,$col1,$operator,$col2);
+		//LEFT JOIN Customers ON Orders.CustomerID=Customers.CustomerID;
+		// $joinFormat=" LEFT JOIN %s ON %s %s %s";
+		// $this->joinSql .= sprintf($joinFormat,$table,$col1,$operator,$col2);
+		$this->join($table,$col1,$operator,$col2,'LEFT');
 		return $this;
 	}
 	/**
@@ -317,9 +361,10 @@ class SelectSql
 	 * */
 	public function rightJoin($table,$col1,$operator,$col2)
 	{
-		//INNER JOIN Customers ON Orders.CustomerID=Customers.CustomerID;
-		$joinFormat=" RIGHT JOIN %s ON %s %s %s";
-		$this->joinSql .= sprintf($joinFormat,$table,$col1,$operator,$col2);
+		//RIGHT JOIN Customers ON Orders.CustomerID=Customers.CustomerID;
+		// $joinFormat=" RIGHT JOIN %s ON %s %s %s";
+		// $this->joinSql .= sprintf($joinFormat,$table,$col1,$operator,$col2);
+		$this->join($table,$col1,$operator,$col2,'RIGHT');
 		return $this;
 	}
 
@@ -345,15 +390,23 @@ class SelectSql
 	 * */
 	public function limit($limit=50)
 	{
-		$this->orderSql = " LIMIT {$limit}";
+		$this->limitSql = " LIMIT {$limit}";
 		if(!is_null($this->offset))
 		{
-			$this->orderSql.=$this->offset;
+			$this->limitSql.=$this->offset;
 
 		}
 		return $this;
 	}
-
+  /**
+   * [escape description]
+   *
+   * @method escape
+   *
+   * @param [type] $str [description]
+   *
+   * @return [type] [description]
+   */
 	public function escape($str)
 	{
 		$str=trim($str);

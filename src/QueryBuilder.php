@@ -29,11 +29,13 @@ class QueryBuilder
 
 	/**
 	 * function __construct
+	 * @param database connection
+	 * @param table name
 	 * */
-	public function __construct($db,$name)
+	public function __construct($db,$table_name)
 	{
 		$this->db = $db;
-		$this->table = trim($name);
+		$this->table = trim($table_name);
 	}
 
 	/**
@@ -43,18 +45,29 @@ class QueryBuilder
 	 * */
 	public function select(...$columns)
 	{
-		//check if columns is not array
-		if(!is_array($columns))
-		{
-			throw new ArrayNotFoundException("Columns is not array");
-		}
-		//check columns is empty array
-		if (empty($columns))
-		{
-     		$columns = ["*"];
-		}
+    //store the fields
+    $fields =[];
 
-		$select= new SelectSql($this->db,$this->table,$columns);
+    //check if string
+    if(is_string($columns))
+    {
+      $fields = explode(',',$columns);
+    }
+    else if (empty($columns)) 	//check columns is empty array
+		{
+     		$fields = ["*"];
+		}
+    else //otherwise all is array
+    {
+      $fields = $columns;
+    }
+
+    if(!$this->table)
+    {
+      throw Exception("Table name did not set");
+    }
+    //call sql class and return data
+		$select= new SelectSql($this->db,$this->table,$fields);
 		return $select;
 	}
 
@@ -95,7 +108,7 @@ class QueryBuilder
 			$colSql[0].= " AS ".$alias;
 		}
 
-		$select= new SelectSql($this->db,$this->table,$colSql,true);
+		$select= new SelectSql($this->db,$this->table,$colSql);
 		return $select->get();
 	}
 
@@ -111,7 +124,7 @@ class QueryBuilder
 		{
 			$colSql[0] .= " AS ".$alias;
 		}
-		$select= new SelectSql($this->db,$this->table,$colSql,true);
+		$select= new SelectSql($this->db,$this->table,$colSql);
 		return $select->get();
 	}
 
@@ -127,7 +140,7 @@ class QueryBuilder
 		{
 			$colSql[0] .= " AS ".$alias;
 		}
-		$select= new SelectSql($this->db,$this->table,$colSql,true);
+		$select= new SelectSql($this->db,$this->table,$colSql);
 		return $select->get();
 	}
 
@@ -143,7 +156,7 @@ class QueryBuilder
 		{
 			$colSql[0] .= " AS ".$alias;
 		}
-		$select = new SelectSql($this->db,$this->table,$colSql,true);
+		$select = new SelectSql($this->db,$this->table,$colSql);
 		return $select->get();
 	}
 
@@ -159,35 +172,43 @@ class QueryBuilder
 		{
 			$colSql[0] .= " AS ".$alias;
 		}
-		$select = new SelectSql($this->db,$this->table,$colSql,true);
+		$select = new SelectSql($this->db,$this->table,$colSql);
 		return $select->get();
 	}
 
 	/**
 	 * function for whereExists
-	 * @param  Closure $paramname description
+	 * @param  Callable $paramname description
 	 * @return  PDOResult description
 	 * */
-	public function whereExists($func)
+	public function whereExists(Callable $func,$fields="*")
 	{
-			$select= new SelectSql($this->db,$this->table,['*']);
-			$that=$this;
-			$sqlWhereExists = call_user_func_array($func, [$that]);
-			return $select->whereRaw("EXISTS({$sqlWhereExists})")->get();
+			//$select= new SelectSql($this->db,$this->table);
+			$select = $this->select($fields);
+		 //$sqlWhereExists = call_user_func_array($func, [$db]);
+		  $sqlWhereExists=null;
+			if(is_callable($func))
+      {
+        $sqlWhereExists=$func($this->db);
+      }else {
+        // code...
+        throw Exception("Function is not callable");
+      }
+      if($sqlWhereExists)
+      {
+			     return $select->whereRaw("EXISTS({$sqlWhereExists})");
+      }else
+      {
+        return $select->get();
+      }
 	}
 	/**
 	 * function to insert data to table
 	 * @param   array $data description
 	 * @return   description
 	 * */
-	public function insert($data)
+	public function insert(array $data)
 	{
-		//check if array
-		if(!is_array($data))
-		{
-			throw new ArrayNotFoundException("Parameter must be Array");
-		}
-
 		$insert =  new InsertSql($this->db,$this->table,$data);
 		return $insert;
 	}
@@ -197,14 +218,8 @@ class QueryBuilder
 	 * @param   array $data description
 	 * @return   description
 	 * */
-	public function insertAndGetId($data)
+	public function insertAndGetId(array $data)
 	{
-		//check if array
-		if(!is_array($data))
-		{
-			throw new ArrayNotFoundException("Parameter must be Array");
-		}
-
 		$insert =  new InsertSql($this->db,$this->table,$data);
 		$insert->save();
 		return $insert->getLastId();
@@ -215,12 +230,8 @@ class QueryBuilder
 	 * @param   array $data description
 	 * @return   description
 	 * */
-	public function update($data)
+	public function update(array $data)
 	{
-		if(!is_array($data))
-		{
-			throw new ArrayNotFoundException("Parameter must be Array");
-		}
 		$update =  new UpdateSql($this->db,$this->table,$data);
 		return $update;
 	}

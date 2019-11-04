@@ -101,7 +101,7 @@ class DB
 	 * */
 	public function select($sql,$params=[])
 	{
-			return $this->conn->query($sql,$params);
+			return $this->rawQuery($sql,$params);
 	}
 
 	/**
@@ -109,14 +109,14 @@ class DB
 	 * */
 	public function insert($sql,$params=[])
 	{
-			return $this->conn->query($sql,$params);
+			return $this->rawQuery($sql,$params);
 	}
 	/**
 	 * alias function of Query
 	 * */
 	public function update($sql,$params=[])
 	{
-			return $this->conn->query($sql,$params);
+		  return $this->rawQuery($sql,$params);
 	}
 
 	/**
@@ -124,7 +124,7 @@ class DB
 	 * */
 	public function delete($sql,$params=[])
 	{
-			return $this->conn->query($sql,$params);
+			return $this->rawQuery($sql,$params);
 	}
 
 	/**

@@ -32,11 +32,11 @@
 	$result = $db->rawQuery("SELECT * FROM system WHERE id = :id LIMIT 1", ['id' => '1']);
 	dump("Single Row Result >> ".$result->username);
 
-   //query to fetch all data
-    $result = $db->table('system')->select("username","password")->get();
-	dump($result);
+ //query to fetch all data
+  $result = $db->table('system')->select("username as user")->get();
+  dump($result);
 
-    //get all results
+  //get all results
 	$result = $db->table('system')->select("*")->get();
 	dump($result);
 
@@ -44,7 +44,7 @@
 	$result = $db->table('system')->select()->get();
 	dump($result);
 
-	$result = $db->table('system')->select("username")->addSelect("password")->get();
+	$result = $db->table('system')->select("username")->addSelect("system.password")->get();
 	dump($result);
 	//loop throgh result set
 	foreach($result as $row )
@@ -60,22 +60,31 @@
 	dump($result);
 
 	//query for whereRaw and orWhereRaw Condition together
-	$result=$db->table('system')->select()->whereRaw('id = ?',['1'])->orWhereRaw('id = ?',['2'])->get();
+	$result=$db->table('system')->select()->whereRaw('id = ?',['1'])->orWhereRaw('id = ?',['127.1.1.1'])->get();
 	dump($result);
 
 	//query for whereRaw and andWhereRaw Condition
 	$result=$db->table('system')->select()->whereRaw('id = ?',[1])->andWhereRaw('username = ?',['admin'])->get();
 	dump($result);
 
-    //where two column paramenter
+  //where two column paramenter
 	$users=$db->table("system")->select()->where("id","1")->get();
 	dump($users);
 
+  $sql=$db->table("system")->select()->orSubWhere('username = ? OR id = ?',['admin','0'])->get();
+	dump($sql);
+  die;
+
+  //where two column paramenter
+  $users=$db->table("system")->select()->whereLike("username","%admin%")->get();
+  dump($users);
+
+
 	//where two column paramenter
-	$users = $db->table("system")->whereExists(function() use($db)
+	$users = $db->table("system")->whereExists(function($db)
 	{
-		return $db->table('rule')->select()->sqlString();
-	});
+		  return $db->table('rule')->select()->sqlString();
+	})->get();
 	dump($users);
 
 	// //query for orderby, offset, limit, groupby
@@ -167,11 +176,11 @@
 	// dump($result);
 
 	//update the data
-	$result = $db->table('rule')->update(
-				['rtype' => 'Operator1', 'permission' => 'Administrator']
-	)->where("id","117")->save();
-
-	dump($result);
+	// $result = $db->table('rule')->update(
+	// 			['rtype' => 'Operator1', 'permission' => 'Administrator']
+	// )->where("id","117")->save();
+  //
+	// dump($result);
 
 	// $result = $db->table('rule')->update(
 	// 			['rtype' => 'Operator2', 'permission' => 'Administrator']
@@ -179,9 +188,9 @@
 
 	// dump($result);
 
-	$result = $db->table('rule')->delete()->where("id","118")->save();
-	dump($result);
-	die;
+	// $result = $db->table('rule')->delete()->where("id","118")->save();
+	// dump($result);
+	// die;
 
 
 ?>

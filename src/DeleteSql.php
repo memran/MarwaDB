@@ -23,7 +23,10 @@ class DeleteSql
 	/**
 	 * var string
 	 * */
-	var $whereSql=null;
+  var $whereSql=null;  //where sql
+  var $whereOrSql=null; //where OR sql
+  var $whereAndSql=null; //where AND sql
+
 	/**
 	 * Update Query Format
 	 * var String
@@ -51,6 +54,10 @@ class DeleteSql
 
 	public function __construct($db,$table)
 	{
+    if(is_null($db) OR is_null($table))
+    {
+      throw new Exception("Table or DB can not null");
+    }
 		//assign database object
 		$this->db = $db;
 		//set table name
@@ -88,10 +95,21 @@ class DeleteSql
 
 		//replace sql place holder
 		$sqlArr[0] = sprintf($this->deleteQuery,$this->table);
-		if (!is_null($this->whereSql))
-		{
-			$sqlArr[0].= $this->whereSql;
-		}
+
+    if(!is_null($this->whereSql))
+    {
+       $sqlArr[0].= $this->whereSql;
+       //check if not null whereOrSql
+       if(!is_null($this->whereOrSql))
+        {
+              $sqlArr[0].=$this->whereOrSql;
+        }
+        //check if not null whereAndSql
+        if(!is_null($this->whereAndSql))
+        {
+              $sqlArr[0].= $this->whereAndSql;
+        }
+     }
 
 		return $sqlArr;
 	}

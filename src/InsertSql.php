@@ -59,27 +59,18 @@ class InsertSql
 
 	public function __construct($db,$table,$data)
 	{
+    //check if array
+    if(!is_array($data))
+    {
+      throw new ArrayNotFoundException("Parameter must be Array");
+    }
+
 		//assign database object
 		$this->db = $db;
 		//set table name
 		$this->table=$table;
 		//data to insert
 		$this->data = $data;
-
-		// //check if array is multi-dimensational
-		// if(!$this->is_multi($data))
-		// {
-		// 	//store the sql and values
-		// 	$this->insertSql = $this->buildInsertSql($data);
-		// 	//save the data
-		// 	$this->result = $this->dataSave($this->insertSql);
-		// }
-		// else
-		// {
-
-
-		// }
-
 	}
 
 	/**
@@ -146,12 +137,12 @@ class InsertSql
 	 * @param  Array $paramname description
 	 * @return  String description
 	 * */
-	public function buildInsertSql($data)
+	public function buildInsertSql(array $data)
 	{
-		$columns=[];
-		$value =[];
-		$placeHolders=[];
-		$sqlArr=[];
+  		$columns=[];
+  		$value =[];
+  		$placeHolders=[];
+  		$sqlArr=[];
 		//loop through array
 		foreach($data as $col => $val)
 		{

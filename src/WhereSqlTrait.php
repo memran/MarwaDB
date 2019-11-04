@@ -8,6 +8,7 @@
  **/
 
 namespace MarwaDB;
+use Exception;
 
 trait WhereSqlTrait
 {
@@ -19,19 +20,14 @@ trait WhereSqlTrait
 	 * @param  string $columns description
 	 * @return  $this description
 	 * */
-	public function whereRaw($searchQuery,$param=null)
+	public function whereRaw(string $searchQuery,$param=null)
 	{
-		//check if search query null
-		if(is_null($searchQuery))
-		{
-			throw new Exception("Where condition can not be null");
-		}
-
 		//wheresql format
-		$whereFormat=' WHERE %s';
+    $whereFormat=" WHERE {$searchQuery}";
 
 		//sprintf with format
-		$this->whereSql = sprintf($whereFormat,$searchQuery);
+		//$this->whereSql = sprintf($whereFormat,$searchQuery);
+		$this->whereSql = $whereFormat;
 		//check if param is not null
 		if(!is_null($param))
 		{
@@ -44,15 +40,15 @@ trait WhereSqlTrait
 	 * @param  string $columns description
 	 * @return  $this description
 	 * */
-	public function orWhereRaw($columns,$param=null)
+	public function orWhereRaw(string $columns,$params=null)
 	{
-		$whereFormat=' OR %s';
-		$this->whereOrSql = sprintf($whereFormat,$columns);
-		if(!is_null($param))
-		{
-			$this->placeHolders=array_merge($this->placeHolders,$param);
-		}
-		return $this;
+  		$this->whereOrSql=" OR {$columns}";
+      //check if placeHolders are not null
+  		if(!is_null($params))
+  		{
+  			$this->placeHolders=array_merge($this->placeHolders,$params);
+  		}
+  		return $this;
 	}
 
 	/**
@@ -60,14 +56,14 @@ trait WhereSqlTrait
 	 * @param  string $columns description
 	 * @return  $this description
 	 * */
-	public function andWhereRaw($columns,$param = null)
+	public function andWhereRaw(string $columns,$params = null)
 	{
-		$whereFormat=' AND %s';
-		$this->whereAndSql = sprintf($whereFormat,$columns);
+    $this->whereAndSql=" AND {$columns}";
+		//$this->whereAndSql = sprintf($whereFormat,$columns);
 
-		if(!is_null($param))
+		if(!is_null($params))
 		{
-			$this->placeHolders=array_merge($this->placeHolders,$param);
+			$this->placeHolders=array_merge($this->placeHolders,$params);
 		}
 		return $this;
 	}
@@ -79,10 +75,224 @@ trait WhereSqlTrait
 	 * @param  string  $data description
 	 * @return  $this description
 	 * */
-	public function where($column,$search,$operator="=")
+	public function where($column,string $search=null,$operator="=")
 	{
-		$colSql= "{$column} {$operator} ?";
-		$this->whereRaw($colSql,[$search]);
+    $colSql ='';
+
+    if(is_string($column) && !is_null($search))
+    {
+      $colSql= "{$column} {$operator} ?";
+      $this->whereRaw($colSql,[$search]);
+    }
+		return $this;
+	}
+
+  /**
+   * [orWhere description]
+   *
+   * @method orWhere
+   *
+   * @param string $column [description]
+   * @param string $placeHolders [description]
+   * @param string $operator [description]
+   *
+   * @return [type] [description]
+   */
+  public function orWhere(string $column,string $placeHolders,$operator="=")
+	{
+    $colSql= "{$column} {$operator} ?";
+		$this->orWhereRaw($colSql,[$placeHolders]);
+		return $this;
+	}
+
+  /**
+   * [andWhere description]
+   *
+   * @method andWhere
+   *
+   * @param string $column [description]
+   * @param string $placeHolders [description]
+   * @param string $operator [description]
+   *
+   * @return [type] [description]
+   */
+  public function andWhere(string $column,string $placeHolders,$operator="=")
+	{
+    $colSql= "{$column} {$operator} ?";
+		$this->andWhereRaw($colSql,[$placeHolders]);
+		return $this;
+	}
+
+  /**
+   * [subWhere description]
+   *
+   * @method subWhere
+   *
+   * @param string $sql [description]
+   * @param array $search [description]
+   *
+   * @return [type] [description]
+   */
+  public function subWhere(string $sql,array $search)
+  {
+    $colSql ='';
+
+    if(is_string($sql) && !is_null($search))
+    {
+      $colSql= "({$sql})";
+      $this->whereRaw($colSql,$search);
+    }
+    return $this;
+  }
+
+  /**
+   * [orSubWhere description]
+   *
+   * @method orSubWhere
+   *
+   * @param string $sql [description]
+   * @param array $search [description]
+   *
+   * @return [type] [description]
+   */
+  public function orSubWhere(string $sql,array $search)
+  {
+    $colSql ='';
+
+    if(is_string($sql) && !is_null($search))
+    {
+      $colSql= "({$sql})";
+      $this->orWhereRaw($colSql,$search);
+    }
+    return $this;
+  }
+
+  /**
+   * [andSubWhere description]
+   *
+   * @method andSubWhere
+   *
+   * @param string $sql [description]
+   * @param array $search [description]
+   *
+   * @return [type] [description]
+   */
+  public function andSubWhere(string $sql,array $search)
+  {
+    $colSql ='';
+
+    if(is_string($sql) && !is_null($search))
+    {
+      $colSql= "({$sql})";
+      $this->andWhereRaw($colSql,$search);
+    }
+    return $this;
+  }
+
+  /**
+   * [whereLike description]
+   *
+   * @method whereLike
+   *
+   * @param string $column [description]
+   * @param string $placeHolders [description]
+   *
+   * @return [type] [description]
+   */
+  public function whereLike(string $column,string $placeHolders)
+	{
+		$colSql = "{$column} LIKE ?";
+
+		$this->whereRaw($colSql,[$placeHolders]);
+		return $this;
+	}
+
+
+  /**
+   * [orWhereLike description]
+   *
+   * @method orWhereLike
+   *
+   * @param string $column [description]
+   * @param string $placeHolders [description]
+   *
+   * @return [type] [description]
+   */
+  public function orWhereLike(string $column,string $placeHolders)
+	{
+		$colSql = "{$column} LIKE ?";
+
+		$this->orWhereRaw($colSql,[$placeHolders]);
+		return $this;
+	}
+
+  /**
+   * [andWhereLike description]
+   *
+   * @method andWhereLike
+   *
+   * @param string $column [description]
+   * @param string $placeHolders [description]
+   *
+   * @return [type] [description]
+   */
+  public function andWhereLike(string $column,string $placeHolders)
+	{
+		$colSql = "{$column} LIKE ?";
+		$this->andWhereRaw($colSql,[$placeHolders]);
+		return $this;
+	}
+
+  /**
+   * [whereNotLike description]
+   *
+   * @method whereNotLike
+   *
+   * @param string $column [description]
+   * @param string $placeHolders [description]
+   *
+   * @return [type] [description]
+   */
+  public function whereNotLike(string $column,string $placeHolders)
+	{
+		$colSql = "{$column} NOT LIKE ?";
+
+		$this->whereRaw($colSql,[$placeHolders]);
+		return $this;
+	}
+  /**
+   * [orWhereNotLike description]
+   *
+   * @method orWhereNotLike
+   *
+   * @param string $column [description]
+   * @param string $placeHolders [description]
+   *
+   * @return [type] [description]
+   */
+  public function orWhereNotLike(string $column,string $placeHolders)
+  {
+    $colSql = "{$column} NOT LIKE ?";
+
+    $this->orWhereRaw($colSql,[$placeHolders]);
+    return $this;
+  }
+
+  /**
+   * [andWhereNotLike description]
+   *
+   * @method andWhereNotLike
+   *
+   * @param string $column [description]
+   * @param string $placeHolders [description]
+   *
+   * @return [type] [description]
+   */
+  public function andWhereNotLike(string $column,string $placeHolders)
+	{
+		$colSql = "{$column} NOT LIKE ?";
+
+		$this->andWhereRaw($colSql,[$placeHolders]);
 		return $this;
 	}
 
@@ -92,38 +302,56 @@ trait WhereSqlTrait
 	 * @param  string $data description
 	 * @return  $this description
 	 * */
-	public function whereBetween($column,$data)
+	public function whereBetween(string $column,array $data)
 	{
 		$colSql= "{$column} BETWEEN ? AND ?";
 		$this->whereRaw($colSql,$data);
 		return $this;
 	}
+
 	/**
 	 * function for orWhereBetween
 	 * @param  string $colum description
 	 * @param  string $data description
 	 * @return  $this description
 	 * */
-	public function orWhereBetween($column,$data)
+	public function orWhereBetween(string $column,array $data)
 	{
 		$colSql= "{$column} BETWEEN ? AND ?";
 		$this->orWhereRaw($colSql,$data);
 		return $this;
 	}
-	/**
-	 * function for WhereNotBetween
-	 * @param  string $colum description
-	 * @param  string $data description
-	 * @return  $this description
-	 * */
-	public function whereNotBetween($column,$data)
-	{
-		$colSql= "{$column} NOT BETWEEN ? AND ?";
-		$this->WhereRaw($colSql,$data);
-		return $this;
-	}
+
+    /**
+     * [andWhereBetween description]
+     *
+     * @method andWhereBetween
+     *
+     * @param string $column [description]
+     * @param array $data [description]
+     *
+     * @return [type] [description]
+     */
+    public function andWhereBetween(string $column,array $data)
+  	{
+  		$colSql= "{$column} BETWEEN ? AND ?";
+  		$this->andWhereRaw($colSql,$data);
+  		return $this;
+  	}
 
 
+  	/**
+  	 * function for WhereNotBetween
+  	 * @param  string $colum description
+  	 * @param  string $data description
+  	 * @return  $this description
+  	 * */
+  	public function whereNotBetween(string $column,array $data)
+  	{
+  		$colSql= "{$column} NOT BETWEEN ? AND ?";
+  		$this->whereRaw($colSql,$data);
+  		return $this;
+  	}
 
 	/**
 	 * function for orWhereNotBetween
@@ -131,10 +359,27 @@ trait WhereSqlTrait
 	 * @param  string $data description
 	 * @return  $this description
 	 * */
-	public function orWhereNotBetween($column,$data)
+	public function orWhereNotBetween(string $column,array $data)
 	{
 		$colSql= "{$column} NOT BETWEEN ? AND ?";
 		$this->orWhereRaw($colSql,$data);
+		return $this;
+	}
+
+  /**
+   * [andWhereNotBetween description]
+   *
+   * @method andWhereNotBetween
+   *
+   * @param string $column [description]
+   * @param array $data [description]
+   *
+   * @return [type] [description]
+   */
+  public function andWhereNotBetween(string $column,array $data)
+	{
+		$colSql= "{$column} NOT BETWEEN ? AND ?";
+		$this->andWhereRaw($colSql,$data);
 		return $this;
 	}
 
@@ -144,7 +389,7 @@ trait WhereSqlTrait
 	 * @param  arary $data description
 	 * @return  $this description
 	 * */
-	public function whereIn($column,$data)
+	public function whereIn(string $column,array $data)
 	{
 		$placeHolders=[];
 		//check if data is array
@@ -171,7 +416,7 @@ trait WhereSqlTrait
 	 * @param  arary $data description
 	 * @return  $this description
 	 * */
-	public function whereNotIn($column,$data)
+	public function whereNotIn(string $column,array $data)
 	{
 		$placeHolders=[];
 		//check if data is array
@@ -198,7 +443,7 @@ trait WhereSqlTrait
 	 * @param  arary $data description
 	 * @return  $this description
 	 * */
-	public function orWhereIn($column,$data)
+	public function orWhereIn(string $column,array $data)
 	{
 		$placeHolders=[];
 		//check if data is array
@@ -225,7 +470,7 @@ trait WhereSqlTrait
 	 * @param  arary $data description
 	 * @return  $this description
 	 * */
-	public function orWhereNotIn($column,$data)
+	public function orWhereNotIn(string $column,array $data)
 	{
 		$placeHolders=[];
 		//check if data is array
@@ -251,7 +496,7 @@ trait WhereSqlTrait
 	 * @param  string $colum description
 	 * @return  $this description
 	 * */
-	public function whereNull($column)
+	public function whereNull(string $column)
 	{
 		$colSql = "{$column} IS NULL";
 		$this->whereRaw($colSql);
@@ -294,11 +539,11 @@ trait WhereSqlTrait
 		return $this;
 	}
 
-    /**
-	 * function for whereDate
-	 * @param  string $colum description
-	 * @return  $this description
-	 * */
+  /**
+ * function for whereDate
+ * @param  string $colum description
+ * @return  $this description
+ * */
 	public function whereDate($column,$data)
 	{
 		$colSql = "DATE({$column}) = ?";
