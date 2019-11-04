@@ -42,7 +42,7 @@ trait WhereSqlTrait
 	 * */
 	public function orWhereRaw(string $columns,$params=null)
 	{
-  		$this->whereOrSql=" OR {$columns}";
+  		$this->whereOrSql.=" OR {$columns}";
       //check if placeHolders are not null
   		if(!is_null($params))
   		{
@@ -58,7 +58,7 @@ trait WhereSqlTrait
 	 * */
 	public function andWhereRaw(string $columns,$params = null)
 	{
-    $this->whereAndSql=" AND {$columns}";
+   		 $this->whereAndSql.=" AND {$columns}";
 		//$this->whereAndSql = sprintf($whereFormat,$columns);
 
 		if(!is_null($params))
