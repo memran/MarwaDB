@@ -51,7 +51,7 @@ interface ConnectionInterface
 	 * function to return affected rows
 	 * @return  int description
 	 * */
-	public  function rows();
+	public  function getRows();
 
 	/**
 	 * function to retrive server status from PDO
