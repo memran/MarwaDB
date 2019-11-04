@@ -330,7 +330,7 @@ class Connection implements ConnectionInterface
 	 * function to return number of rows from sql query
 	 * @return  int description
 	 * */
-	public function rows()
+	public function getRows()
 	{
 			return $this->numRows;
 	}

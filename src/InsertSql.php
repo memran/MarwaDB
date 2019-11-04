@@ -126,6 +126,7 @@ class InsertSql
 			if(!is_null($this->db) && !is_null($sql))
 			{
 				$result = $this->db->insert($sql[0],$sql[1]);
+        //assign last inserted id
 				$this->lastId = $this->db->getPdo()->lastInsertId();
 				return $result;
 			}

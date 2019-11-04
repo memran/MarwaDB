@@ -74,12 +74,12 @@ class DB
 	}
 
 	/**
-	 * function to return number of rows
+	 * function to return of result fetched rows
 	 * @return  int number of rows
 	 * */
-	public function count()
+	public function rows()
 	{
-		return $this->conn->rows();
+		return $this->conn->getRows();
 	}
 
 
