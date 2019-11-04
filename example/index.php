@@ -13,7 +13,7 @@
 	$db = new DB($config['database']);
 
 	$result = $db->rawQuery('SELECT * FROM system WHERE id = ?',[1]);
-	dump("Total Rows Returned >>> ".$db->count());
+	dump("Total Rows Returned >>> ".$db->rows());
 	dump($result);
 
 	$result=$db->connection('sqlSrv')->rawQuery('SELECT * FROM system WHERE id = ?',[1]);
