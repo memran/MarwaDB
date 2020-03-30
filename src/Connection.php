@@ -186,7 +186,34 @@ class Connection implements ConnectionInterface
 		$dbNewConfig['dsn'] = $this->buildDSN($dbConfig);
 		$dbNewConfig['username'] = trim($dbConfig['username']);
 		$dbNewConfig['password'] = trim($dbConfig['password']);
-		$dbNewConfig['options'] = $this->options;
+
+		if(array_key_exists('options', $dbConfig))
+		{
+			$dbNewConfig['options'] = array_unique(array_merge($this->options,$dbConfig['options']));
+			//$dbNewConfig['options'] = $dbConfig['options'];
+		}
+		else
+		{
+			$dbNewConfig['options'] = $this->options;
+		}
+
+		//check return type
+		if(array_key_exists('returnType', $dbConfig))
+		{
+			if($dbConfig['returnType'] == "array")
+			{
+				$dbNewConfig['options'][\PDO::ATTR_DEFAULT_FETCH_MODE] = PDO::FETCH_ASSOC ;
+			}
+			else
+			{
+				$dbNewConfig['options'][\PDO::ATTR_DEFAULT_FETCH_MODE] = PDO::FETCH_OBJ ;
+			}
+		}
+		else
+		{
+			$dbNewConfig['options'][\PDO::ATTR_DEFAULT_FETCH_MODE] = PDO::FETCH_OBJ ;
+		}
+
 		return $dbNewConfig;
 	}
 
@@ -197,12 +224,12 @@ class Connection implements ConnectionInterface
 	 * */
 	private function buildDSN($config)
 	{
-			$dsn = $config['driver'].":host=".$config['host'].";dbname=".$config["database"];
-			if($config['driver'] === "mysql")
-			{
-				$dsn .= ";charset=".$config['charset'];
-			}
-			return $dsn;
+		$dsn = $config['driver'].":host=".$config['host'].";dbname=".$config["database"];
+		if($config['driver'] === "mysql")
+		{
+			$dsn .= ";charset=".$config['charset'];
+		}
+		return $dsn;
 	}
 	/**
 	 * function getConnection
@@ -244,7 +271,7 @@ class Connection implements ConnectionInterface
 	    	throw new PDOException($e->getMessage(), (int)$e->getCode());
 	    }
 
-		  return $this->pdo;
+		return $this->pdo;
 
 	}
 
@@ -254,8 +281,8 @@ class Connection implements ConnectionInterface
 	 * */
 	public function reconnect()
 	{
-			$this->pdo = null;
-			return $this->connect();
+		$this->pdo = null;
+		return $this->connect();
 	}
 
 	/**
@@ -265,50 +292,50 @@ class Connection implements ConnectionInterface
 	 * */
 	public function query($sqlQuery,$bindParam=[])
 	{
+		//delete all white space in the query
+		$sqlQuery=$this->removeWhiteSpace($sqlQuery);
 
-			$sqlQuery=$this->removeWhiteSpace($sqlQuery);
+		//statement prepare
+		$stmt=null;
+		//fetch result
+		$result=null;
+		//connect the database
+		$this->connect();
 
-			//statement prepare
-			$stmt=null;
-			//fetch result
-			$result=null;
-			//connect the database
-			$this->connect();
+		//check bindParam is empty
+		if(empty($bindParam))
+		{
+			$stmt = $this->pdo->query($sqlQuery);
+		}
+		else //if bind param is not empty
+		{
+			$stmt = $this->pdo->prepare($sqlQuery);
+			$stmt->execute($bindParam);
+		}
 
-			//check bindParam is empty
-			if(empty($bindParam))
+		$this->numRows = $stmt->rowCount();
+
+		//check query contains select
+		$selectQuery = $this->isSelect($sqlQuery);
+
+		//check if select query returns true
+		if($selectQuery)
+		{
+			//check if it is multiple rows
+			if($this->numRows > 1 )
 			{
-				$stmt = $this->pdo->query($sqlQuery);
+				return $stmt->fetchAll();
 			}
-			else //if bind param is not empty
+			else //return if rows 1 or less
 			{
-				$stmt = $this->pdo->prepare($sqlQuery);
-				$stmt->execute($bindParam);
+				return $stmt->fetch();
 			}
 
-			$this->numRows = $stmt->rowCount();
-
-			//check query contains select
-			$selectQuery = $this->isSelect($sqlQuery);
-
-			//check if select query returns true
-			if($selectQuery)
-			{
-				//check if it is multiple rows
-				if($this->numRows > 1 )
-				{
-					return $stmt->fetchAll();
-				}
-				else //return if rows 1 or less
-				{
-					return $stmt->fetch();
-				}
-
-			}
-			else
-			{
-				return $this->numRows;
-			}
+		}
+		else
+		{
+			return $this->numRows;
+		}
 	}
 
 	/**

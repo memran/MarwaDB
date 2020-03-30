@@ -67,14 +67,13 @@ class SelectSql
 			foreach($columns as $k => $v)
 			{
 				$tabSql = "";
-        if (strpos($v, '.') !== false) {
-        	$tabSql = $this->table.".".$v;
-        }
-        else //add the table name and push to arary
-        {
-          $tabSql =$v;
-        }
-
+		        if (strpos($v, '.') !== false) {
+		        	$tabSql = $this->table.".".$v;
+		        }
+		        else //add the table name and push to arary
+		        {
+		          $tabSql =$v;
+		        }
 				array_push($this->selectQuery,$tabSql);
 			}
 		}
@@ -95,13 +94,13 @@ class SelectSql
 		if(!is_null($this->selectQuery))
 		{
 			//check if string contains "as" then donot add table name
-      if (strpos($columns, '.') !== false) {
-        array_push($this->selectQuery,$columns);
-      }
-      else //add the table name and push to arary
-      {
-        array_push($this->selectQuery,$this->table.".".$columns);
-      }
+		      if (strpos($columns, '.') !== false) {
+		        array_push($this->selectQuery,$columns);
+		      }
+		      else //add the table name and push to arary
+		      {
+		        array_push($this->selectQuery,$this->table.".".$columns);
+		      }
 
 		}
 
@@ -198,10 +197,10 @@ class SelectSql
 
 		$this->sqlString();
 
-	  //if Database object is not null then execute query
+	    //if Database object is not null then execute query
 		if(!is_null($this->db))
 		{
-  		$result = $this->db->rawQuery($this->sql_query,$this->placeHolders);
+  			$result = $this->db->rawQuery($this->sql_query,$this->placeHolders);
 			return $result;
 		}
 		else

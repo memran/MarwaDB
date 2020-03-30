@@ -11,12 +11,19 @@
 	}
 
 	$db = new DB($config['database']);
-
 	$result = $db->rawQuery('SELECT * FROM system WHERE id = ?',[1]);
+    $myArray = $db->toArray();
+    dump($myArray);
+
+    $result = $db->rawQuery('SELECT * FROM system');
+    $myArray = $db->toArray();
+    dump($myArray);
+
 	dump("Total Rows Returned >>> ".$db->rows());
 	dump($result);
 
 	$result=$db->connection('sqlSrv')->rawQuery('SELECT * FROM system WHERE id = ?',[1]);
+
 	dump("Result with Specific Connection Name >>> ".$result->username);
 
 	$result=$db->connection()->rawQuery('SELECT * FROM system WHERE id = ?',[1]);
@@ -36,7 +43,7 @@
   $result = $db->table('system')->select("username as user")->get();
   dump($result);
 
-  //get all results
+	//get all results
 	$result = $db->table('system')->select("*")->get();
 	dump($result);
 

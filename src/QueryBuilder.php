@@ -45,28 +45,28 @@ class QueryBuilder
 	 * */
 	public function select(...$columns)
 	{
-    //store the fields
-    $fields =[];
+	    //store the fields
+	    $fields =[];
 
-    //check if string
-    if(is_string($columns))
-    {
-      $fields = explode(',',$columns);
-    }
-    else if (empty($columns)) 	//check columns is empty array
+	    //check if string
+	    if(is_string($columns))
+	    {
+	      $fields = explode(',',$columns);
+	    }
+	    else if (empty($columns)) 	//check columns is empty array
 		{
-     		$fields = ["*"];
+	 		$fields = ["*"];
 		}
-    else //otherwise all is array
-    {
-      $fields = $columns;
-    }
+	    else //otherwise all is array
+	    {
+	      $fields = $columns;
+	    }
 
-    if(!$this->table)
-    {
-      throw Exception("Table name did not set");
-    }
-    //call sql class and return data
+	    if(!$this->table)
+	    {
+	      throw Exception("Table name did not set");
+	    }
+	    //call sql class and return data
 		$select= new SelectSql($this->db,$this->table,$fields);
 		return $select;
 	}
@@ -183,24 +183,28 @@ class QueryBuilder
 	 * */
 	public function whereExists(Callable $func,$fields="*")
 	{
-			//$select= new SelectSql($this->db,$this->table);
-			$select = $this->select($fields);
-		 //$sqlWhereExists = call_user_func_array($func, [$db]);
-		  $sqlWhereExists=null;
-			if(is_callable($func))
-      {
-        $sqlWhereExists=$func($this->db);
-      }else {
-        // code...
-        throw Exception("Function is not callable");
-      }
-      if($sqlWhereExists)
-      {
-			     return $select->whereRaw("EXISTS({$sqlWhereExists})");
-      }else
-      {
-        return $select->get();
-      }
+		//$select= new SelectSql($this->db,$this->table);
+		$select = $this->select($fields);
+		//$sqlWhereExists = call_user_func_array($func, [$db]);
+		$sqlWhereExists=null;
+		if(is_callable($func))
+    	{
+        	$sqlWhereExists=$func($this->db);
+      	}
+      	else
+      	{
+        	// code...
+        	throw Exception("Function is not callable");
+      	}
+      	//if WHERE EXISTS
+    	if($sqlWhereExists)
+    	{
+		    return $select->whereRaw("EXISTS({$sqlWhereExists})");
+    	}
+      	else
+      	{
+        	return $select->get();
+      	}
 	}
 	/**
 	 * function to insert data to table

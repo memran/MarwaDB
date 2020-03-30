@@ -27,6 +27,7 @@ class DB
 	*/
 	protected $pdo=null;
 
+	protected $result=null;
 	/**
 	 * function __construct
 	 * */
@@ -45,13 +46,28 @@ class DB
 	}
 
 	/**
+	 * [toArray description] function to convert result object to resutl array
+	 * @return [type] [description]
+	 */
+	public function toArray()
+	{
+		if(!is_null($this->result))
+		{
+			$res=json_decode(json_encode($this->result), true);
+    		return $res;
+		}
+		return false;
+	}
+
+	/**
 	 * function database query
 	 * @param  $sqlQuery description
 	 * @param  $bindParam
 	 * */
 	public function rawQuery($sqlQuery,$bindParam=[])
 	{
-			return $this->conn->query($sqlQuery,$bindParam);
+			$this->result=$this->conn->query($sqlQuery,$bindParam);
+			return $this->result;
 	}
 
 	/**
@@ -91,8 +107,9 @@ class DB
 	public function table($name)
 	{
 		$this->conn->connect();
-		$qb = new QueryBuilder($this,$name);
-		return $qb;
+		$this->result = new QueryBuilder($this,$name);
+
+		return $this->result;
 	}
 
 
