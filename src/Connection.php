@@ -21,6 +21,12 @@ class Connection implements ConnectionInterface
 	protected $pdo=null;
 
 	/**
+	 * [$mode description]
+	 * @var string
+	 */
+	protected $mode= 'object';
+
+	/**
 	 * var default connection name
 	 * */
 	var $defaultConn=null;
@@ -40,14 +46,14 @@ class Connection implements ConnectionInterface
 	 *
 	 * @var array
 	 */
-	protected $options = array(
+	protected $options = [
 	        \PDO::ATTR_CASE => PDO::CASE_NATURAL,
 	        \PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 	        \PDO::ATTR_ORACLE_NULLS => PDO::NULL_NATURAL,
 	        \PDO::ATTR_STRINGIFY_FETCHES => false,
 	        \PDO::ATTR_EMULATE_PREPARES => false,
 	        \PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
-	);
+			];
 
 	/**
 	 * Function constructor
@@ -78,7 +84,12 @@ class Connection implements ConnectionInterface
 	{
 			foreach($config as $k => $v)
 			{
-					$this->setConnection($k,$v);
+				$this->setConnection($k,$v);
+				//set default connection
+				if(is_null($this->defaultConn))
+				{
+					$this->defaultConn = $k;
+				}
 			}
 	}
 
@@ -99,16 +110,12 @@ class Connection implements ConnectionInterface
 		if(is_array($config))
 		{
 			$this->dbConfig[$name] = $this->__validateKey($config);
-			//set default connection
-			if(is_null($this->defaultConn))
-			{
-				$this->defaultConn = $name;
-			}
 		}
 		else
 		{
 			throw new ArrayNotFoundException("Database Configuration Array not found!");
 		}
+
 
 	}
 	/**
@@ -187,31 +194,18 @@ class Connection implements ConnectionInterface
 		$dbNewConfig['username'] = trim($dbConfig['username']);
 		$dbNewConfig['password'] = trim($dbConfig['password']);
 
+		if(array_key_exists('returnType',$dbConfig))
+		{
+			$dbNewConfig['returnType'] = $dbConfig['returnType'];
+		}
+
 		if(array_key_exists('options', $dbConfig))
 		{
 			$dbNewConfig['options'] = array_unique(array_merge($this->options,$dbConfig['options']));
-			//$dbNewConfig['options'] = $dbConfig['options'];
 		}
 		else
 		{
 			$dbNewConfig['options'] = $this->options;
-		}
-
-		//check return type
-		if(array_key_exists('returnType', $dbConfig))
-		{
-			if($dbConfig['returnType'] == "array")
-			{
-				$dbNewConfig['options'][\PDO::ATTR_DEFAULT_FETCH_MODE] = PDO::FETCH_ASSOC ;
-			}
-			else
-			{
-				$dbNewConfig['options'][\PDO::ATTR_DEFAULT_FETCH_MODE] = PDO::FETCH_OBJ ;
-			}
-		}
-		else
-		{
-			$dbNewConfig['options'][\PDO::ATTR_DEFAULT_FETCH_MODE] = PDO::FETCH_OBJ ;
 		}
 
 		return $dbNewConfig;
@@ -264,7 +258,13 @@ class Connection implements ConnectionInterface
 		//try to connect PDO
 		try
 		{
-			$this->pdo = new PDO($this->dbConfig[$this->defaultConn]['dsn'],$this->dbConfig[$this->defaultConn]['username'],$this->dbConfig[$this->defaultConn]['password'],$this->dbConfig[$this->defaultConn]['options']);
+			$this->pdo = new PDO($this->dbConfig[$this->defaultConn]['dsn'],
+				$this->dbConfig[$this->defaultConn]['username'],
+				$this->dbConfig[$this->defaultConn]['password'],
+				$this->dbConfig[$this->defaultConn]['options']);
+
+
+
 		}
 		catch(PDOException $e)
 	    {
@@ -272,6 +272,31 @@ class Connection implements ConnectionInterface
 	    }
 
 		return $this->pdo;
+
+	}
+
+	/**
+	 * [setFetchMode description]
+	 */
+	protected function setFetchMode($type=null)
+	{
+
+		if(is_null($type))
+		{
+			if(array_key_exists('returnType',$this->dbConfig[$this->defaultConn]))
+			{
+				$this->mode = $this->dbConfig[$this->defaultConn]['returnType'];
+			}
+			else
+			{
+				$this->mode = 'object';
+			}
+
+		}
+		else
+		{
+			$this->mode = $type;
+		}
 
 	}
 
@@ -321,14 +346,14 @@ class Connection implements ConnectionInterface
 		//check if select query returns true
 		if($selectQuery)
 		{
-			//check if it is multiple rows
-			if($this->numRows > 1 )
+
+			if($this->mode == 'array')
 			{
-				return $stmt->fetchAll();
+				return $stmt->fetchAll(PDO::FETCH_ASSOC);
 			}
-			else //return if rows 1 or less
+			else
 			{
-				return $stmt->fetch();
+				return $stmt->fetchAll(PDO::FETCH_OBJ);
 			}
 
 		}

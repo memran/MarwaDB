@@ -146,8 +146,8 @@ class SelectSql
 		 //check whereSql
 		 if(!is_null($this->whereSql))
 		 {
-        //concat wheresql to the main sql
-        $this->sql_query .= $this->whereSql;
+        	//concat wheresql to the main sql
+        	$this->sql_query .= $this->whereSql;
 
   		 	//check if not null whereOrSql
   		 	if(!is_null($this->whereOrSql))
@@ -222,8 +222,8 @@ class SelectSql
 		{
 			throw new Exception("Order by parameter is null");
 		}
-    $this->orderSql = " ORDER BY {$columns}";
-    //$whereFormat=' ORDER BY ?';
+    	$this->orderSql = " ORDER BY {$columns}";
+    	//$whereFormat=' ORDER BY ?';
 		//$this->orderSql = sprintf($whereFormat,$columns);
 		return $this;
 	}

@@ -12,36 +12,32 @@
 
 	$db = new DB($config['database']);
 	$result = $db->rawQuery('SELECT * FROM system WHERE id = ?',[1]);
-    $myArray = $db->toArray();
-    dump($myArray);
+  	dump($result);
 
-    $result = $db->rawQuery('SELECT * FROM system');
-    $myArray = $db->toArray();
-    dump($myArray);
-
-	dump("Total Rows Returned >>> ".$db->rows());
+    $result = $db->rawQuery('SELECT * FROM system LIMIT 1');
 	dump($result);
+	dump("Total Rows Returned >>> ".$db->rows());
 
 	$result=$db->connection('sqlSrv')->rawQuery('SELECT * FROM system WHERE id = ?',[1]);
 
-	dump("Result with Specific Connection Name >>> ".$result->username);
+	dump("Result with Specific Connection Name >>> ".$result[0]->username);
 
 	$result=$db->connection()->rawQuery('SELECT * FROM system WHERE id = ?',[1]);
-	dump("Result with Null Connection >>> ".$result->username);
+	dump("Result with Null Connection >>> ".$result[0]->username);
 
 	$result=$db->select('SELECT * FROM system');
 	dump("Result without PlaceHolder >>> ".$result[0]->username);
 
 	$result=$db->select('SELECT * FROM system WHERE id = ?',[1]);
-	dump("Result with PlaceHolder >>> ".$result->username);
+	dump("Result with PlaceHolder >>> ".$result[0]->username);
 
 	//SELECT single row query
 	$result = $db->rawQuery("SELECT * FROM system WHERE id = :id LIMIT 1", ['id' => '1']);
-	dump("Single Row Result >> ".$result->username);
+	dump("Single Row Result >> ".$result[0]->username);
 
- //query to fetch all data
-  $result = $db->table('system')->select("username as user")->get();
-  dump($result);
+	 //query to fetch all data
+	  $result = $db->table('system')->select("username as user")->get();
+	  dump($result);
 
 	//get all results
 	$result = $db->table('system')->select("*")->get();
@@ -80,7 +76,6 @@
 
   $sql=$db->table("system")->select()->orSubWhere('username = ? OR id = ?',['admin','0'])->get();
 	dump($sql);
-  die;
 
   //where two column paramenter
   $users=$db->table("system")->select()->whereLike("username","%admin%")->get();
@@ -110,8 +105,8 @@
 	$result=$db->table('system')->select("*")->get();
 	dump($result);
 
-	//select distinct
-	$users = $db->table('system')->distinct("username")->get();
+	//select distinct with return sql string
+	$users = $db->table('termination_ip')->distinct("mac","password","gwtype","status")->sqlString();
 	dump($users);
 
 	//inner join
