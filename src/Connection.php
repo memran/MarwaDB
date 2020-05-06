@@ -262,9 +262,6 @@ class Connection implements ConnectionInterface
 				$this->dbConfig[$this->defaultConn]['username'],
 				$this->dbConfig[$this->defaultConn]['password'],
 				$this->dbConfig[$this->defaultConn]['options']);
-
-
-
 		}
 		catch(PDOException $e)
 	    {
@@ -291,7 +288,6 @@ class Connection implements ConnectionInterface
 			{
 				$this->mode = 'object';
 			}
-
 		}
 		else
 		{
@@ -327,40 +323,48 @@ class Connection implements ConnectionInterface
 		//connect the database
 		$this->connect();
 
-		//check bindParam is empty
-		if(empty($bindParam))
+		try
 		{
-			$stmt = $this->pdo->query($sqlQuery);
-		}
-		else //if bind param is not empty
-		{
-			$stmt = $this->pdo->prepare($sqlQuery);
-			$stmt->execute($bindParam);
-		}
-
-		$this->numRows = $stmt->rowCount();
-
-		//check query contains select
-		$selectQuery = $this->isSelect($sqlQuery);
-
-		//check if select query returns true
-		if($selectQuery)
-		{
-
-			if($this->mode == 'array')
+			//check bindParam is empty
+			if(empty($bindParam))
 			{
-				return $stmt->fetchAll(PDO::FETCH_ASSOC);
+				$stmt = $this->pdo->query($sqlQuery);
+			}
+			else //if bind param is not empty
+			{
+				$stmt = $this->pdo->prepare($sqlQuery);
+				$stmt->execute($bindParam);
+			}
+
+			$this->numRows = $stmt->rowCount();
+
+			//check query contains select
+			$selectQuery = $this->isSelect($sqlQuery);
+
+			//check if select query returns true
+			if($selectQuery)
+			{
+
+				if($this->mode == 'array')
+				{
+					return $stmt->fetchAll(PDO::FETCH_ASSOC);
+				}
+				else
+				{
+					return $stmt->fetchAll(PDO::FETCH_OBJ);
+				}
+
 			}
 			else
 			{
-				return $stmt->fetchAll(PDO::FETCH_OBJ);
+				return $this->numRows;
 			}
+		}
+		catch(PDOException $e)
+	    {
+	    	throw new PDOException($e->getMessage(), (int)$e->getCode());
+	    }
 
-		}
-		else
-		{
-			return $this->numRows;
-		}
 	}
 
 	/**
