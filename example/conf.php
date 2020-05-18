@@ -13,7 +13,8 @@ return [
 					'username' => "root",
 					'password' => "",
 					'charset' => "utf8mb4",
-					'returnType'=> 'object'
+					'returnType'=> 'object',
+          'debug' => true
 				],
 			'sqlSrv'=>
 				[

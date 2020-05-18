@@ -24,12 +24,12 @@ class Connection implements ConnectionInterface
 	 * [$mode description]
 	 * @var string
 	 */
-	protected $mode= 'object';
+	protected $mode= 'array';
 
 	/**
 	 * var default connection name
 	 * */
-	var $defaultConn=null;
+	protected $defaultConn=null;
 
 	/**
 	 * Array
@@ -52,7 +52,7 @@ class Connection implements ConnectionInterface
 	        \PDO::ATTR_ORACLE_NULLS => PDO::NULL_NATURAL,
 	        \PDO::ATTR_STRINGIFY_FETCHES => false,
 	        \PDO::ATTR_EMULATE_PREPARES => false,
-	        \PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
+	        \PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
 			];
 
 	/**
@@ -64,14 +64,15 @@ class Connection implements ConnectionInterface
 		//check PDO driver is available
 		if (!defined('PDO::ATTR_DRIVER_NAME'))
 		{
-				throw new NotFoundException('PDO extension is not loaded');
+			throw new NotFoundException('PDO extension is not loaded');
 		}
 
 		//check Database config exists
 		if(is_null($dbConfig))
 		{
-				throw new ArrayNotFoundException("Database Configuration Array");
+			throw new ArrayNotFoundException("Database Configuration Array");
 		}
+
 		$this->validateAndBuild($dbConfig);
 
 	}
@@ -246,9 +247,13 @@ class Connection implements ConnectionInterface
 		return $this->connect();
 	}
 
-    /**
-     * function to connect Database
-     * */
+  /**
+   * [connect description]
+   *
+   * @method connect
+   *
+   * @return [type] [description]
+   */
 	public function connect()
 	{
 		if(!is_null($this->pdo))
@@ -272,12 +277,15 @@ class Connection implements ConnectionInterface
 
 	}
 
-	/**
-	 * [setFetchMode description]
-	 */
-	protected function setFetchMode($type=null)
+  /**
+ * [setFetchMode description]
+ *
+ * @method setFetchMode
+ *
+ * @param [type] $type [description]
+ */
+	public function setFetchMode($type=null)
 	{
-
 		if(is_null($type))
 		{
 			if(array_key_exists('returnType',$this->dbConfig[$this->defaultConn]))
@@ -374,21 +382,18 @@ class Connection implements ConnectionInterface
 	 * */
 	private function removeWhiteSpace($text)
 	{
-	    $text = preg_replace('/[\t\n\r\0\x0B]/', '', $text);
-	    $text = preg_replace('/([\s])\1+/', ' ', $text);
-	    $text = trim($text);
-
+    $text = preg_replace('/[\t\n\r\0\x0B]/', '', $text);
+    $text = preg_replace('/([\s])\1+/', ' ', $text);
+    $text = trim($text);
 		return $text;
 	}
-
-
 	/**
 	 * function to return number of rows from sql query
 	 * @return  int description
 	 * */
 	public function getRows()
 	{
-			return $this->numRows;
+	  return $this->numRows;
 	}
 	/**
 	 * function to check sql query start with SELECT
@@ -401,8 +406,8 @@ class Connection implements ConnectionInterface
 		{
 			return true;
 		}
-		else
-			return false;
+
+		return false;
 
 	}
 
@@ -414,7 +419,7 @@ class Connection implements ConnectionInterface
 	{
 		if(!is_null($this->pdo))
 		{
-				return $this->pdo->getAttribute(constant("PDO::ATTR_SERVER_INFO"));
+			return $this->pdo->getAttribute(constant("PDO::ATTR_SERVER_INFO"));
 		}
 		return null;
 	}

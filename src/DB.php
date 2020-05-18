@@ -13,6 +13,7 @@ use PDO;
 use PDOException;
 use MarwaDB\QueryBuilder;
 use MarwaDB\Connection;
+use Tracy\Debugger;
 
 class DB
 {
@@ -27,13 +28,22 @@ class DB
 	*/
 	protected $pdo=null;
 
+  /**
+   * [protected description]
+   *
+   * @var [type]
+   */
 	protected $result=null;
 	/**
 	 * function __construct
 	 * */
-	public function __construct($dbArray)
+	public function __construct($dbArray,bool $debug=false)
 	{
 		$this->conn = new Connection($dbArray);
+    if($debug)
+    {
+      Debugger::enable();
+    }
 	}
 
 	/**
@@ -66,8 +76,8 @@ class DB
 	 * */
 	public function rawQuery($sqlQuery,$bindParam=[])
 	{
-			$this->result=$this->conn->query($sqlQuery,$bindParam);
-			return $this->result;
+		$this->result=$this->conn->query($sqlQuery,$bindParam);
+		return $this->result;
 	}
 
 	/**
@@ -98,6 +108,18 @@ class DB
 		return $this->conn->getRows();
 	}
 
+  /**
+   * [setFetchMode description]
+   *
+   * @method setFetchMode
+   *
+   * @param [type] $type [description]
+   */
+  public function setFetchMode($type)
+  {
+    $this->conn->setFetchMode($type);
+    return $this;
+  }
 
 	/**
 	 * function to move on QueryBuilder Class
@@ -126,14 +148,14 @@ class DB
 	 * */
 	public function insert($sql,$params=[])
 	{
-			return $this->rawQuery($sql,$params);
+		return $this->rawQuery($sql,$params);
 	}
 	/**
 	 * alias function of Query
 	 * */
 	public function update($sql,$params=[])
 	{
-		  return $this->rawQuery($sql,$params);
+		return $this->rawQuery($sql,$params);
 	}
 
 	/**
@@ -141,7 +163,7 @@ class DB
 	 * */
 	public function delete($sql,$params=[])
 	{
-			return $this->rawQuery($sql,$params);
+		return $this->rawQuery($sql,$params);
 	}
 
 	/**
@@ -194,8 +216,8 @@ class DB
 		}
 		catch (Exception $e)
 		{
-    		$this->rollback();
-    		throw $e;
+  		$this->rollback();
+  		throw $e;
 		}
 
 	}

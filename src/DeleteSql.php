@@ -8,24 +8,36 @@
  **/
 namespace MarwaDB;
 
-use MarwaDB\Exceptions\ArrayNotFoundException;
-use MarwaDB\Exceptions\NotFoundException;
+use MarwaDB\Exceptions\{ArrayNotFoundException,InvalidArgumentException,NotFoundException};
 use MarwaDB\WhereSqlTrait;
 
 class DeleteSql
 {
-	use WhereSqlTrait;
-	/**
-	 * var string
-	 * */
-	var $deleteSql=null;
-
-	/**
-	 * var string
-	 * */
-  var $whereSql=null;  //where sql
-  var $whereOrSql=null; //where OR sql
-  var $whereAndSql=null; //where AND sql
+  use WhereSqlTrait;
+  /**
+   * [$deleteSql description]
+   *
+   * @var [type]
+   */
+  var $deleteSql;
+  /**
+   * [$whereSql description]
+   *
+   * @var [type]
+   */
+  var $whereSql;
+  /**
+   * [$whereOrSql description]
+   *
+   * @var [type]
+   */
+  var $whereOrSql; //where OR sql
+  /**
+   * [$whereAndSql description]
+   *
+   * @var [type]
+   */
+  var $whereAndSql; //where AND sql
 
 	/**
 	 * Update Query Format
@@ -36,14 +48,13 @@ class DeleteSql
 	/**
 	 * var \MarwaDB\DB
 	 * */
-	var $db=null;
+	var $db;
 
 	/**
 	 * table name
 	 * var string
 	 * */
-	var $table=null;
-
+	var $table;
 
 	/**
 	 * function __construct
@@ -54,15 +65,14 @@ class DeleteSql
 
 	public function __construct($db,$table)
 	{
-    if(is_null($db) OR is_null($table))
-    {
-      throw new Exception("Table or DB can not null");
-    }
+		if(is_null($db) OR is_null($table))
+		{
+		  throw new InvalidArgumentException("Invalid Arguments");
+		}
 		//assign database object
 		$this->db = $db;
 		//set table name
 		$this->table=$table;
-
 	}
 
 	/**
@@ -72,16 +82,14 @@ class DeleteSql
 	 * */
 	public function save()
 	{
-			//get the build sql
-			$sql = $this->buildSql();
+		//get the build sql
+		$sql = $this->buildSql();
 
-			if(!is_null($this->db) && !is_null($sql))
-			{
-				$result = $this->db->delete($sql[0],$this->placeHolders);
-				return $result;
-			}
-			else
-				return false;
+		if(!is_null($this->db) && !is_null($sql))
+		{
+			return $this->db->delete($sql[0],$this->placeHolders);
+		}
+		return false;
 	}
 
 	/**
@@ -98,18 +106,18 @@ class DeleteSql
 
     if(!is_null($this->whereSql))
     {
-       $sqlArr[0].= $this->whereSql;
-       //check if not null whereOrSql
-       if(!is_null($this->whereOrSql))
-        {
-              $sqlArr[0].=$this->whereOrSql;
-        }
-        //check if not null whereAndSql
-        if(!is_null($this->whereAndSql))
-        {
-              $sqlArr[0].= $this->whereAndSql;
-        }
-     }
+     $sqlArr[0].= $this->whereSql;
+     //check if not null whereOrSql
+     if(!is_null($this->whereOrSql))
+      {
+        $sqlArr[0].=$this->whereOrSql;
+      }
+      //check if not null whereAndSql
+      if(!is_null($this->whereAndSql))
+      {
+        $sqlArr[0].= $this->whereAndSql;
+      }
+    }
 
 		return $sqlArr;
 	}

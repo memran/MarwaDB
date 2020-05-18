@@ -9,16 +9,18 @@
 	{
 		die('Database configuration not found');
 	}
+  //first argument is connection array
+  //second argument is debug enable
+	$db = new DB($config['database'],$config['debug']);
 
-	$db = new DB($config['database']);
 	$result = $db->rawQuery('SELECT * FROM system WHERE id = ?',[1]);
-  	dump($result);
+  dump($result);
 
-    $result = $db->rawQuery('SELECT * FROM system LIMIT 1');
+  $result = $db->rawQuery('SELECT * FROM system LIMIT 1');
 	dump($result);
 	dump("Total Rows Returned >>> ".$db->rows());
 
-	$result=$db->connection('sqlSrv')->rawQuery('SELECT * FROM system WHERE id = ?',[1]);
+	$result=$db->connection('sqlSrv')->setFetchMode('array')->rawQuery('SELECT * FROM system WHERE id = ?',[1]);
 
 	dump("Result with Specific Connection Name >>> ".$result[0]->username);
 
@@ -35,9 +37,9 @@
 	$result = $db->rawQuery("SELECT * FROM system WHERE id = :id LIMIT 1", ['id' => '1']);
 	dump("Single Row Result >> ".$result[0]->username);
 
-	 //query to fetch all data
-	  $result = $db->table('system')->select("username as user")->get();
-	  dump($result);
+ //query to fetch all data
+  $result = $db->table('system')->select("username as user")->get();
+  dump($result);
 
 	//get all results
 	$result = $db->table('system')->select("*")->get();
@@ -74,6 +76,7 @@
 	$users=$db->table("system")->select()->where("id","1")->get();
 	dump($users);
 
+
   $sql=$db->table("system")->select()->orSubWhere('username = ? OR id = ?',['admin','0'])->get();
 	dump($sql);
 
@@ -85,7 +88,7 @@
 	//where two column paramenter
 	$users = $db->table("system")->whereExists(function($db)
 	{
-		  return $db->table('rule')->select()->sqlString();
+	  return $db->table('rule')->select()->sqlString();
 	})->get();
 	dump($users);
 

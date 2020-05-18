@@ -21,11 +21,21 @@ class UpdateSql
 	 * */
 	var $updateSql=null;
 
-	/**
-	 * var string
-	 * */
-   var $whereSql=null;  //where sql
-   var $whereOrSql=null; //where OR sql
+  /**
+  * var string
+  * */
+  var $whereSql=null;  //where sql
+  /**
+  * [$whereOrSql description]
+  *
+  * @var [type]
+  */
+  var $whereOrSql=null; //where OR sql
+  /**
+  * [$whereAndSql description]
+  *
+  * @var [type]
+  */
    var $whereAndSql=null; //where AND sql
 	/**
 	 * Update Query Format
@@ -73,10 +83,11 @@ class UpdateSql
 		$this->db = $db;
 		//set table name
 		$this->table=$table;
+
 		//check if array is multi-dimensational
 		if($this->is_multi($data))
 		{
-			throw new Exception("multi-dimentional array is not accepted");
+			throw new \Exception("multi-dimentional array is not accepted");
 		}
 
 		//set data to update
@@ -90,24 +101,24 @@ class UpdateSql
 	 * */
 	public function save()
 	{
-			//get the build sql
-			$sql=$this->buildSql();
+		//get the build sql
+		list($sql,$placeholders)=$this->buildSql();
+		if(!is_null($this->db) && !is_null($sql))
+		{
+			return $this->db->update($sql,$placeHolders);
+		}
 
-			if(!is_null($this->db) && !is_null($sql))
-			{
-				$result = $this->db->update($sql[0],$sql[1]);
-				return $result;
-			}
-			else
-				return false;
+		return false;
 	}
 
 	/**
-	 * function to build Insert Sql
-	 * @param  Array $paramname description
-	 * @return  String description
-	 * */
-	public function buildSql()
+   * [buildSql description]
+   *
+   * @method buildSql
+   *
+   * @return array [description]
+   */
+	public function buildSql() : array
 	{
 		$columns=[];
 		$value =[];
@@ -116,34 +127,32 @@ class UpdateSql
 		//loop through array
 		foreach($this->data as $col => $val)
 		{
-				$placeHolders = $col." = ?";
-				//inject column name
-				array_push($columns,$placeHolders);
-				//inject column value
-				array_push($value, $val);
-
+			$placeHolders = $col." = ?";
+			//inject column name
+			array_push($columns,$placeHolders);
+			//inject column value
+			array_push($value, $val);
 		}
 
 		//implode column with comma(,)
 		$colSql = implode(",",$columns);
-
 
 		//replace sql place holder
 		$sqlArr[0] = sprintf($this->updateQuery,$this->table,$colSql);
 
     if(!is_null($this->whereSql))
     {
-       $sqlArr[0].= $this->whereSql;
-       //check if not null whereOrSql
-       if(!is_null($this->whereOrSql))
-        {
-              $sqlArr[0].=$this->whereOrSql;
-        }
-        //check if not null whereAndSql
-        if(!is_null($this->whereAndSql))
-        {
-              $sqlArr[0].= $this->whereAndSql;
-        }
+     $sqlArr[0].= $this->whereSql;
+     //check if not null whereOrSql
+     if(!is_null($this->whereOrSql))
+      {
+        $sqlArr[0].=$this->whereOrSql;
+      }
+      //check if not null whereAndSql
+      if(!is_null($this->whereAndSql))
+      {
+        $sqlArr[0].= $this->whereAndSql;
+      }
      }
 
 		$sqlArr[1] = $value;
@@ -159,9 +168,9 @@ class UpdateSql
 	 * @return  Boolean description
 	 * */
 	public function is_multi($a) {
-    	$rv = array_filter($a,'is_array');
-    	if(count($rv)>0) return true;
-    	return false;
+  	$rv = array_filter($a,'is_array');
+  	if(count($rv)>0) return true;
+  	return false;
 	}
 
 }

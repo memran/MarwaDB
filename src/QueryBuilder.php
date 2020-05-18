@@ -9,8 +9,7 @@
 
 namespace MarwaDB;
 
-use MarwaDB\Exceptions\ArrayNotFoundException;
-use MarwaDB\Exceptions\NotFoundException;
+use MarwaDB\Exceptions\{ArrayNotFoundException,NotFoundException};
 use MarwaDB\InsertSql;
 use MarwaDB\UpdateSql;
 
@@ -20,12 +19,12 @@ class QueryBuilder
 	/**
 	 * var string table name
 	 * */
-	var $table;
+	protected $table;
 
 	/**
 	 * var object
 	 * */
-	var $db=null;
+	protected $db;
 
 	/**
 	 * function __construct
@@ -45,30 +44,29 @@ class QueryBuilder
 	 * */
 	public function select(...$columns)
 	{
-	    //store the fields
-	    $fields =[];
+    if(!$this->table)
+    {
+      throw Exception("Table name did not set");
+    }
+    //store the fields
+    $fields =[];
 
-	    //check if string
-	    if(is_string($columns))
-	    {
-	      $fields = explode(',',$columns);
-	    }
-	    else if (empty($columns)) 	//check columns is empty array
+	  //check if string
+    if(is_string($columns))
+    {
+      $fields = explode(',',$columns);
+    }
+    else if (empty($columns)) 	//check columns is empty array
 		{
 	 		$fields = ["*"];
 		}
-	    else //otherwise all is array
-	    {
-	      $fields = $columns;
-	    }
+    else //otherwise all is array
+    {
+      $fields = $columns;
+    }
 
-	    if(!$this->table)
-	    {
-	      throw Exception("Table name did not set");
-	    }
-	    //call sql class and return data
-		$select= new SelectSql($this->db,$this->table,$fields);
-		return $select;
+	 //call sql class and return data
+		return new SelectSql($this->db,$this->table,$fields);
 	}
 
 	/**
@@ -187,24 +185,20 @@ class QueryBuilder
 		$select = $this->select($fields);
 		//$sqlWhereExists = call_user_func_array($func, [$db]);
 		$sqlWhereExists=null;
-		if(is_callable($func))
-    	{
-        	$sqlWhereExists=$func($this->db);
-      	}
-      	else
-      	{
-        	// code...
-        	throw Exception("Function is not callable");
-      	}
-      	//if WHERE EXISTS
-    	if($sqlWhereExists)
-    	{
-		    return $select->whereRaw("EXISTS({$sqlWhereExists})");
-    	}
-      	else
-      	{
-        	return $select->get();
-      	}
+		if(!is_callable($func))
+  	{
+      throw new \Exception("Function is not callable");
+
+  	}
+    $sqlWhereExists=call_user_func($func,$this->db);// $func($this->db);
+    //if WHERE EXISTS
+  	if($sqlWhereExists)
+  	{
+	    return $select->whereRaw("EXISTS({$sqlWhereExists})");
+  	}
+
+  	return $select->get();
+
 	}
 	/**
 	 * function to insert data to table
@@ -213,8 +207,7 @@ class QueryBuilder
 	 * */
 	public function insert(array $data)
 	{
-		$insert =  new InsertSql($this->db,$this->table,$data);
-		return $insert;
+	  return new InsertSql($this->db,$this->table,$data);
 	}
 
 	/**
@@ -236,8 +229,7 @@ class QueryBuilder
 	 * */
 	public function update(array $data)
 	{
-		$update =  new UpdateSql($this->db,$this->table,$data);
-		return $update;
+		return new UpdateSql($this->db,$this->table,$data);
 	}
 
 	/**
@@ -246,8 +238,8 @@ class QueryBuilder
 	 * */
 	public function delete()
 	{
-		$delete =  new DeleteSql($this->db,$this->table);
-		return $delete;
+	  return new DeleteSql($this->db,$this->table);
+
 	}
 
 }
