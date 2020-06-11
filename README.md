@@ -6,7 +6,7 @@ Just install the package, add the config and it is ready to use!
 
 ## Requirements
 
-- PHP >= 7.0.0
+- PHP >= 7.2.0
 - PDO Extension
 
 ## Features
