@@ -1,4 +1,6 @@
-﻿# MarwaDB for MarwaPHP Framework
+[![Build Status](https://travis-ci.org/memran/MarwaDB.svg?branch=master)](https://travis-ci.org/memran/MarwaDB)
+
+# MarwaDB for MarwaPHP Framework
 
 **MarwaDB** is php mysql library for **MarwaPHP** framework based on PDO. It is robust, faster and simple. It is query builder with PDO connection. No External Library has been used. It is raw and simple PHP Mysql Library by focusing speed, simplicity and scalability. Function names are same as **Laravel** Eloquent Builder.
 
