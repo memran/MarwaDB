@@ -1,26 +1,28 @@
 {
-    "name": "memran/marwadb",
-    "description": "PHP Mysql Database Library",
-    "authors": [
-      {
-        "name": "Mohammad Emran",
-        "email": "memran.dhk@gmail.com"
-      }
-    ],
-    "keywords": ["php", "mysql", "pdo"],
-    "license": "MIT",
-    "minimum-stability": "dev",
-    "require": {
-      "php": ">= 7.2.0"
-    },
-    "autoload": {
-      "psr-4": {
-        "MarwaDB\\": "src/"
-      }
-    },
-    "require-dev": {
-      "phpunit/phpunit": "~5.0",
-      "symfony/var-dumper": "4.4.x-dev",
-      "tracy/tracy": "^2.8@dev"
+  "name": "memran/marwadb",
+  "description": "PHP Mysql Database Library",
+  "authors": [
+    {
+      "name": "Mohammad Emran",
+      "email": "memran.dhk@gmail.com"
     }
+  ],
+  "keywords": [
+    "php",
+    "mysql",
+    "pdo"
+  ],
+  "license": "MIT",
+  "require": {
+    "php": ">= 7.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "MarwaDB\\": "src/"
+    }
+  },
+  "require-dev": {
+    "symfony/var-dumper": "4.4.x-dev",
+    "phpunit/phpunit": "8"
+  }
 }

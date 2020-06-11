@@ -1,7 +1,7 @@
-<?PHP
+<?php
 /**
  * @author    Mohammad Emran <memran.dhk@gmail.com>
- * @copyright 2018
+ * @copyright 2020
  *
  * @see      https://www.github.com/memran
  * @see      http://www.memran.me
@@ -9,240 +9,346 @@
 
 namespace MarwaDB;
 
-use MarwaDB\Exceptions\{ArrayNotFoundException,NotFoundException};
-use MarwaDB\InsertSql;
-use MarwaDB\UpdateSql;
+use MarwaDB\Exceptions\InvalidArgumentException;
+use MarwaDB\QueryFactory;
+use MarwaDB\BuilderFactory;
 
 class QueryBuilder
 {
+    /**
+     * Undocumented variable
+     *
+     * @var [type]
+     */
+    protected $_table;
 
-	/**
-	 * var string table name
-	 * */
-	protected $table;
-
-	/**
-	 * var object
-	 * */
-	protected $db;
-
-	/**
-	 * function __construct
-	 * @param database connection
-	 * @param table name
-	 * */
-	public function __construct($db,$table_name)
-	{
-		$this->db = $db;
-		$this->table = trim($table_name);
-	}
-
-	/**
-	 *  function select database query builder
-	 * @param  $columns description
-	 * @return  $this description
-	 * */
-	public function select(...$columns)
-	{
-    if(!$this->table)
+    /**
+     * Undocumented variable
+     *
+     * @var string
+     */
+    protected $_driver = 'mysql';
+    /**
+     * Undocumented variable
+     *
+     * @var array
+     */
+    protected $_methods=[];
+    /**
+     * Undocumented variable
+     *
+     * @var [type]
+     */
+    protected $_builderName='select';
+    /**
+     * Undocumented variable
+     *
+     * @var array
+     */
+    protected $_builderList=['select','insert','update','delete'];
+    /**
+     * Undocumented variable
+     *
+     * @var [type]
+     */
+    protected $_updateOrInsert;
+    /**
+     * Undocumented variable
+     *
+     * @var array
+     */
+    protected $_data=[];
+    /**
+     * Undocumented variable
+     *
+     * @var [type]
+     */
+    protected $_db;
+    /**
+     * Undocumented function
+     *
+     * @param string $table
+     */
+    public function __construct(DB $db, string $table)
     {
-      throw Exception("Table name did not set");
+        $this->_db = $db;
+        
+        if (empty($table)) {
+            throw new InvalidArgumentException("Table name is empty", 1);
+        }
+        $this->_table = $table;
     }
-    //store the fields
-    $fields =[];
-
-	  //check if string
-    if(is_string($columns))
+    
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getTable() : string
     {
-      $fields = explode(',',$columns);
+        return $this->_table;
     }
-    else if (empty($columns)) 	//check columns is empty array
-		{
-	 		$fields = ["*"];
-		}
-    else //otherwise all is array
+    
+    /**
+     * Undocumented function
+     *
+     * @param string $driver
+     * @return void
+     */
+    public function setDriver(string $driver)
     {
-      $fields = $columns;
+        $this->_driver = $driver;
+        return $this;
     }
 
-	 //call sql class and return data
-		return new SelectSql($this->db,$this->table,$fields);
-	}
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getDriver() : string
+    {
+        return ucfirst(strtolower($this->_driver));
+    }
+    /**
+     * Undocumented function
+     *
+     * @param array $data
+     * @return void
+     */
+    public function insert(array $data)
+    {
+        if (Util::is_multi($data)) {
+            foreach ($data as $key => $value) {
+                $res = $this->runQuery('insert', $value);
+            }
+        } else {
+            $res = $this->runQuery('insert', $data);
+        }
+        return $res;
+    }
+    /**
+     * Undocumented function
+     *
+     * @param array $data
+     * @return void
+     */
+    public function insertGetId(array $data)
+    {
+        if (!Util::is_multi($data)) {
+            $this->runQuery('insert', $data);
+            return $this->_db->getConnection()->getLastId();
+        } else {
+            throw new InvalidArgumentException("Multi-dimentional array not supported");
+        }
+    }
+    /**
+     * Undocumented function
+     *
+     * @param [type] $type
+     * @param [type] $data
+     * @return void
+     */
+    protected function runQuery($type, $data)
+    {
+        $this->setBuilderName($type);
+        $this->setData($data);
+        //dump($this->buildQuery());
+        return $this->_db->raw($this->buildQuery());
+    }
+    /**
+     * Undocumented function
+     *
+     * @param array $data
+     * @return void
+     */
+    public function update(array $data)
+    {
+        $this->setBuilderName('update');
+        $this->setData($data);
+        //dump($this->buildQuery());
+        return $this->_db->raw($this->buildQuery());
+    }
+  
+    /**
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @param array $values
+     * @return void
+     */
+    public function updateOrInsert(array $attributes, array $values)
+    {
+        $this->setBuilderName('insert');
+        $this->setData($values);
+        $this->setUpdateOrInsert($attributes);
+        //dump($this->buildQuery());
+        return $this->_db->raw($this->buildQuery());
+    }
+    /**
+     * Undocumented function
+     *
+     * @param array $attributes
+     * @return void
+     */
+    protected function setUpdateOrInsert(array $attributes)
+    {
+        $this->_updateOrInsert = $attributes;
+    }
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    protected function getUpdateOrInsert()
+    {
+        return $this->_updateOrInsert;
+    }
+    
+    /**
+     * Undocumented function
+     *
+     * @param array $data
+     * @return void
+     */
+    public function delete()
+    {
+        $this->setBuilderName('delete');
+        return $this->_db->raw($this->buildQuery());
+    }
+    /**
+     * Undocumented function
+     *
+     * @param string $type
+     * @return void
+     */
+    public function dump(string $type='select')
+    {
+        $this->setBuilderName($type);
+        dump($this->buildQuery());
+    }
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function dd()
+    {
+        $this->dump();
+        die;
+    }
 
-	/**
-	 *  function select database query builder
-	 * @param  $columns description
-	 * @return  $this description
-	 * */
-	public function distinct(...$columns)
-	{
-		//check if columns is not array
-		if(!is_array($columns))
-		{
-			throw new ArrayNotFoundException("Columns is not array");
-		}
-		//check columns is empty array
-		if (empty($columns))
-		{
-     		$columns = ["*"];
-		}
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function get()
+    {
+        $this->setBuilderName('select');
+        return $this->_db->raw($this->buildQuery());
+    }
+    /**
+     * Undocumented function
+     *
+     * @param array $data
+     * @return void
+     */
+    protected function setData(array $data)
+    {
+        $this->_data = $data;
+    }
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    protected function getData()
+    {
+        return $this->_data;
+    }
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    protected function buildQuery()
+    {
+        //dump($this->_target);
+        //if ('select' === $this->_target) {
+        //get SelectBuilder Object based on Driver
+        $builder = QueryFactory::getInstance(
+            $this->getDriver(),
+            $this->getBuilderName()
+        );
+            
+        // Builder Director based on Driver
+        $director = BuilderFactory::getInstance(
+            $builder,
+            $this->getBuilderName(),
+            $this->getTable(),
+            $this->getDriver()
+        );
+        //set list of methods to build sql query
+        
+        if ($this->getBuilderName() === 'insert') {
+            $director->updateOrInsert($this->getUpdateOrInsert());
+            $director->setData($this->getdata());
+        } elseif ($this->getBuilderName() === 'update') {
+            $director->setData($this->getdata());
+            $director->setMethods($this->_methods);
+        } else {
+            $director->setMethods($this->_methods);
+        }
+        //build sql query
+        $director->buildQuery();
+        return $director->getSql();
+        //}
+    }
+    /**
+     * Undocumented function
+     *
+     * @param string $name
+     * @return void
+     */
+    protected function setBuilderName(string $name) : void
+    {
+        if (in_array($name, $this->_builderList)) {
+            $this->_builderName = strtolower($name);
+        } else {
+            throw new InvalidArgumentException("Wrong Builder name provided");
+        }
+    }
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    protected function getBuilderName() : string
+    {
+        return $this->_builderName;
+    }
 
-		$select= new SelectSql($this->db,$this->table,$columns);
-		$select->distinct();
-		return $select;
-	}
-
-	/**
-	 * function to count data from column
-	 * @param   $columnname description
-	 * @param   $alias description
-	 * */
-	public function count($column="*" , $alias=null)
-	{
-		$colSql[0]="COUNT({$column})";
-
-		if(!is_null($alias))
-		{
-			$colSql[0].= " AS ".$alias;
-		}
-
-		$select= new SelectSql($this->db,$this->table,$colSql);
-		return $select->get();
-	}
-
-	/**
-	 * function to sum a column data from sql
-	 * @param   $columnname description
-	 * @param   $alias description
-	 * */
-	public function sum($column="*",$alias=null)
-	{
-		$colSql[0]= "SUM({$column})";
-		if(!is_null($alias))
-		{
-			$colSql[0] .= " AS ".$alias;
-		}
-		$select= new SelectSql($this->db,$this->table,$colSql);
-		return $select->get();
-	}
-
-	/**
-	 * function to avg a column data from sql
-	 * @param   $columnname description
-	 * @param   $alias description
-	 * */
-	public function avg($column="*",$alias=null)
-	{
-		$colSql[0]= "AVG({$column})";
-		if(!is_null($alias))
-		{
-			$colSql[0] .= " AS ".$alias;
-		}
-		$select= new SelectSql($this->db,$this->table,$colSql);
-		return $select->get();
-	}
-
-	/**
-	 * function to max a column data from sql
-	 * @param   $columnname description
-	 * @param   $alias description
-	 * */
-	public function max($column="*",$alias=null)
-	{
-		$colSql[0]= "MAX({$column})";
-		if(!is_null($alias))
-		{
-			$colSql[0] .= " AS ".$alias;
-		}
-		$select = new SelectSql($this->db,$this->table,$colSql);
-		return $select->get();
-	}
-
-	/**
-	 * function to min a column data from sql
-	 * @param   $columnname description
-	 * @param   $alias description
-	 * */
-	public function min($column="*",$alias=null)
-	{
-		$colSql[0]= "MIN({$column})";
-		if(!is_null($alias))
-		{
-			$colSql[0] .= " AS ".$alias;
-		}
-		$select = new SelectSql($this->db,$this->table,$colSql);
-		return $select->get();
-	}
-
-	/**
-	 * function for whereExists
-	 * @param  Callable $paramname description
-	 * @return  PDOResult description
-	 * */
-	public function whereExists(Callable $func,$fields="*")
-	{
-		//$select= new SelectSql($this->db,$this->table);
-		$select = $this->select($fields);
-		//$sqlWhereExists = call_user_func_array($func, [$db]);
-		$sqlWhereExists=null;
-		if(!is_callable($func))
-  	{
-      throw new \Exception("Function is not callable");
-
-  	}
-    $sqlWhereExists=call_user_func($func,$this->db);// $func($this->db);
-    //if WHERE EXISTS
-  	if($sqlWhereExists)
-  	{
-	    return $select->whereRaw("EXISTS({$sqlWhereExists})");
-  	}
-
-  	return $select->get();
-
-	}
-	/**
-	 * function to insert data to table
-	 * @param   array $data description
-	 * @return   description
-	 * */
-	public function insert(array $data)
-	{
-	  return new InsertSql($this->db,$this->table,$data);
-	}
-
-	/**
-	 * function to insert data to table
-	 * @param   array $data description
-	 * @return   description
-	 * */
-	public function insertAndGetId(array $data)
-	{
-		$insert =  new InsertSql($this->db,$this->table,$data);
-		$insert->save();
-		return $insert->getLastId();
-
-	}
-     /**
-	 * function to insert data to table
-	 * @param   array $data description
-	 * @return   description
-	 * */
-	public function update(array $data)
-	{
-		return new UpdateSql($this->db,$this->table,$data);
-	}
-
-	/**
-	 * function to delete data to table
-	 * @return  Boolean description
-	 * */
-	public function delete()
-	{
-	  return new DeleteSql($this->db,$this->table);
-
-	}
-
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->buildQuery();
+    }
+       
+    /**
+     * Undocumented function
+     *
+     * @param [type] $method
+     * @param [type] $args
+     * @return void
+     */
+    public function __call($method, $args)
+    {
+        $this->_methods[$method]=$args;
+        return $this;
+    }
 }
-
-
-?>

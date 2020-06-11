@@ -1,229 +1,420 @@
-## MarwaDB for MarwaPHP Framework
+﻿# MarwaDB for MarwaPHP Framework
 
-**MarwaDB** is php mysql library for **MarwaPHP** framework based on PDO. It is robust, faster and simple. No External Library has been used. It is raw and simple PHP Mysql Library by focusing speed and simplicity.
+**MarwaDB** is php mysql library for **MarwaPHP** framework based on PDO. It is robust, faster and simple. It is query builder with PDO connection. No External Library has been used. It is raw and simple PHP Mysql Library by focusing speed, simplicity and scalability. Function names are same as **Laravel** Eloquent Builder.
 
 Just install the package, add the config and it is ready to use!
 
 ## Requirements
 
-* PHP >= 5.6.0
-* PDO Extension
+- PHP >= 7.0.0
+- PDO Extension
+
+## Features
+
+- Easy to create flexible queries
+- Supports any database compatible with PDO
+- Simple to build complex queries with little code
+- Blazing Fast
 
 ## Installation
+
+This package is installable and PSR-4 autoloadable via Composer as
 
     composer require memran/marwadb:dev-master
 
 ## Usage
 
-    //create Database Class
+Create a new DB class, and pass the configruation array to MarwaDB:
 
-    require_once('../vendor/autoload.php');
-    use MarwaDB\Connection;
-    use MarwaDB\DB;
-
-    //Database Configuration
-    $config = [
-    			'default'=>
-    				[
-    					'driver' => "mysql",
-    					'host' => "localhost",
-    					'port' => 3306,
-    					'database' => "rbc",
-    					'username' => "root",
-    					'password' => "",
-    					'charset' => "utf8mb4",
-    				],
-    			'sqlSrv'=>
-    				[
-    					'driver' => "mysql",
-    					'host' => "localhost",
-    					'port' => 3306,
-    					'database' => "rbc",
-    					'username' => "root",
-    					'password' => "",
-    					'charset' => "utf8mb4",
-    				]
-    			];
-
-    //database Class Object
+```php
+        require_once('../vendor/autoload.php');
+        use MarwaDB\DB;
+        $config = [
+	        'default'=>
+		        [
+			       'driver' => "mysql",
+			       'host' => "localhost",
+			       'port' => 3306,
+			       'database' => "test",
+			       'username' => "root",
+			       'password' => "1234",
+			       'charset' => "utf8mb4",
+		        ]
+	    ];
     $db = new DB($config);
+```
 
-    //DB Query
+### DB Raw Query
+
+```php
+    $result = $db->raw('SELECT * FROM system WHERE id = ?',[1]);
+    dump($result)
+```
+
+Alternatively , you can use following function also:
+
+```php
     $result = $db->rawQuery('SELECT * FROM system WHERE id = ?',[1]);
+    dump($result)
+```
 
-    //symfony varDump Function to print result
-    dump("Total Rows Returned >>> ".$db->count());
+### Get Total Result
+
+```php
+    dump("Total Rows Returned >>> ".$db->rows());
+```
+
+### PDO Server Status
+
+```php
+    $db->status();
+```
+
+### Connection name Specified Query
+
+```php
+    $result=$db->connection('sqlSrv')->rawQuery('SELECT  *  FROM users WHERE id = ?',  [1]);
     dump($result);
+```
 
-    //Connection name Specified Query
-    $result=$db->connection('sqlSrv')->rawQuery('SELECT * FROM system WHERE id = ?',[1]);
-  	dump("Result >>> ".$result->username);
+### Change Result Fetch Mode
 
-    //Default Connection name
-    $result=$db->connection()->rawQuery('SELECT * FROM system WHERE id = ?',[1]);
-   	dump("Result >>> ".$result->username);
-
-    //Select All
-    $result=$db->select('SELECT * FROM system');
-    dump("Result >>> ".$result[0]->username);
-
-    //Select Query with Where
-    $result=$db->select('SELECT * FROM system WHERE id = ?',[1]);
-    dump("Result>>> ".$result->username);
-
-    //SELECT single row query
-    $result = $db->rawQuery("SELECT * FROM system WHERE id = :id LIMIT 1", ['id' => '1']);
-    dump("Single Row Result >> ".$result->username);
-
-    //query to fetch all data
-    $result = $db->table('system')->select("username","password")->get();
+```php
+    $result=$db->connection('sqlSrv')->setFetchMode('array')->rawQuery('SELECT  *  FROM users WHERE id = ?',  [1]);
     dump($result);
+```
 
-    //get all results
-    $result = $db->table('system')->select("*")->get();
-    dump($result);
+### Transaction
 
-    //get all result
-    $result = $db->table('system')->select()->get();
-    dump($result);
-
-    $result = $db->table('system')->select("username")->addSelect("password")->get();
-    dump($result);
-
-    //loop throgh result set
-    	foreach($result as $row )
-    	{
-    		dump("Username :".$row->username);
-    	}
-
-    //Query Builder on Where condition
-    $result=$db->table('system')->select()->whereRaw('id = ?',["1"])->get();
-    dump($result);
-
-    //Query Builder Select Query
-    $result=$db->table('system')->select()->whereRaw('id = 1')->get();
-    dump($result);
-    //query for whereRaw and orWhereRaw Condition together
-    $result=$db->table('system')->select()->whereRaw('id = ?',['1'])->orWhereRaw('id = ?',['2'])->get();
-    dump($result);
-
-    //query for whereRaw and andWhereRaw Condition
-    $result=$db->table('system')->select()->whereRaw('id = ?',[1])->andWhereRaw('username = ?',['admin'])->get();
-    dump($result);
-
-    //where two column paramenter
-    $users=$db->table("system")->select()->where("id","1")->get();
-    dump($users);
-
-    //where two column paramenter
-    $users = $db->table("system")->whereExists(function() use($db)
-    {
-    	return $db->table('rule')->select()->sqlString();
+```php
+    $db->transaction(function($db){
+       $db->rawQuery('DELETE  FROM users WHERE id = ?',  [4]);
+       dump($db->rows());
     });
-    dump($users);
+```
 
-    //query for orderby, offset, limit, groupby
-    $result = $db->table('system')->select()->orderBy('id','DESC')->offset(0)->limit(1)->groupBy('id')->get();
+### Simple Select Query without Placeholder
+
+```php
+    $result =  $db->select('SELECT  *  FROM users');
     dump($result);
+```
 
-    //query for havingRaw
-    $result=$db->table('system')->select()->havingRaw('id = 1')->get();
+### With Placeholder
+
+```php
+    $result=$db->select('SELECT  *  FROM users WHERE id = ?',  [1]);
     dump($result);
+```
 
-    //select Raw
-    $result=$db->table('system')->select("username")->get();
+### PDO Bind Param
+
+```php
+    $result =  $db->raw("SELECT  *  FROM users WHERE id = :id",  ['id'  =>  '1']);
     dump($result);
+```
 
-    //select column by choose
-    $result=$db->table('system')->select("*")->get();
-    dump($result);
+### Get Connection Driver
 
-    //select distinct
-    $users = $db->table('system')->distinct("username")->get();
-    dump($users);
+```php
+    dump($db->getDriver());
+```
 
-    //inner join
-    $users=$db->table("system")->select()->join("rule",'rule.id','=','system.type')->get();
-    dump($users);
+### Retrieving All Rows From A Table
 
-    //leftjoin Sql
-    $users=$db->table("system")->select()->leftjoin("rule",'rule.id','=','system.type')->get();
-    dump($users);
+```php
+$db->table('users')->get();
+```
 
-    //rightJoin
-    $users=$db->table("system")->select()->rightjoin("rule",'rule.id','=','system.type')->get();
-    dump($users);
+### Retrieving A Single Row / Column From A Table
 
-    //whereBetween
-    $users=$db->table("system")->select()->whereBetween('id',[0,10])->get();
-    dump($users);
+```php
+$db->table('users')->where('name', 'Marwa')->first()->get();
+```
 
-    $users=$db->table("system")->select()->whereBetween('id',[0,10])->orWhereBetween('id',[0,10])->get();
-    dump($users);
+### Retrieving A List Of Column Values
 
-    //where is NULL
-    $users=$db->table("system")->select()->whereNull('id')->get();
-    dump($users);
+```php
+$db->table('roles')->select(['title', 'name'])->get();
+```
 
-    //where is NOT NULL
-    $users=$db->table("system")->select()->whereNotNull('id')->get();
-    dump($users);
+### Aggregates Function
 
-    //Count Total Rows
-    $users=$db->table("system")->count('*','total');
-    dump($users);
+```php
+$users = $db->table('users')->count()->get();
+$price = $db->table('orders')->max('price')->get();
+$price = $db->table('orders')->avg('price')->get();
+$price = $db->table('orders')->min('price')->get();
+```
 
-    //sum of column
-    $users=$db->table("system")->sum('id','total');
-    dump($users);
+## Selects
 
-    //Wherein
-    $users=$db->table("system")->select()->whereIn("id",[1,2])->get();
-    dump($users);
+#### Specifying A Select Clause
 
-    //WhereNotIn
-    $users=$db->table("system")->select()->whereNotIn("id",[1])->get();
-    dump($users);
+```php
+$users = $db->table('users')->select(['name', 'email as user_email'])->get();
+```
 
-    //WhereDate
-    $users=$db->table("activecalls")->select()->whereDate("connecttime",'2019-06-17')->get();
-    dump($users);
+the _distinct_ method allows you to retrieve distinct results:
 
-    //whereMonth
-    $users=$db->table("activecalls")->select()->whereMonth("connecttime",'06')->get();
-    dump($users);
+```php
+$users = $db->table('users')->distinct()->get();
+```
 
-    //insert and save thedata
-     $result=$db->table('rule')->insert(
-     		[
-    	 			['rtype' => 'Operator6', 'permission' => 'Administrator'],
-    	 			['rtype' => 'Operator8', 'permission' => 'Administrator'],
-    	 		]
-    	 )->save();
-    dump($result);
+You may add column:
 
-    //insert and retrieve last inserted id
-        $result=$db->table('rule')->insertAndGetId(
-     		[
-     			['rtype' => 'Operator7', 'permission' => 'Administrator'],
-     			['rtype' => 'Operator9', 'permission' => 'Administrator'],
-     		]
-     );
-     dump($result);
+```php
+$result =$db->table('users')->addSelect('age')->get();
+```
 
-    //update the data
-    $result = $db->table('rule')->update(
-    			['rtype' => 'Operator1', 'permission' => 'Administrator']
-    )->where("id","117")->save();
+## Joins
 
-    dump($result);
+#### Inner Join Clause
 
-    $result = $db->table('rule')->update(
-     			['rtype' => 'Operator2', 'permission' => 'Administrator']
-     )->where("id","109")->save();
+```php
+$users = $db->table('users')
+            ->join('contacts', 'users.id', '=', 'contacts.user_id')
+            ->join('orders', 'users.id', '=', 'orders.user_id')
+            ->select('users.*', 'contacts.phone', 'orders.price')
+            ->get();
+```
 
-    dump($result);
+#### Left Join / Right Join Clause
 
-    $result = $db->table('rule')->delete()->where("id","118")->save();
-    dump($result);
+```php
+$users = $db->table('users')
+            ->leftJoin('posts', 'users.id', '=', 'posts.user_id')
+            ->get();
 
+$users = $db->table('users')
+            ->rightJoin('posts', 'users.id', '=', 'posts.user_id')
+            ->get();
+```
+
+## Unions
+
+```php
+$first = $db->table('users')
+            ->whereNull('first_name');
+
+$users = $db->table('users')
+            ->whereNull('last_name')
+            ->union($first)
+            ->get();
+```
+
+## Where Clauses
+
+#### Simple Where Clauses
+
+```php
+$users = $db->table('users')->where('votes', '=', 100)->get();
+```
+
+You may use a variety of other operators when writing a `where` clause:
+
+```php
+$users = $db->table('users')
+                ->where('votes', '>=', 100)
+                ->get();
+
+$users = $db->table('users')
+                ->where('votes', '<>', 100)
+                ->get();
+
+$users = $db->table('users')
+                ->where('name', 'like', 'T%')
+                ->get();
+```
+
+#### Or Statements
+
+```php
+$users = $db->table('users')
+                    ->where('votes', '>', 100)
+                    ->orWhere('name', 'John')
+                    ->get();
+```
+
+#### Additional Where Clauses
+
+**whereBetween / orWhereBetween**
+
+```php
+$users = $db->table('users')
+           ->whereBetween('votes', [1, 100])
+           ->get();
+```
+
+**whereNotBetween / orWhereNotBetween**
+
+```php
+$users = $db->table('users')
+                    ->whereNotBetween('votes', [1, 100])
+                    ->get();
+```
+
+**whereIn / whereNotIn / orWhereIn / orWhereNotIn**
+
+```php
+$users = $db->table('users')
+                    ->whereIn('id', [1, 2, 3])
+                    ->get();
+```
+
+```php
+$users = $db->table('users')
+                    ->whereNotIn('id', [1, 2, 3])
+                    ->get();
+```
+
+**whereNull / whereNotNull / orWhereNull / orWhereNotNull**
+
+```php
+$users = $db->table('users')
+                    ->whereNull('updated_at')
+                    ->get();
+```
+
+```php
+$users = $db->table('users')
+                    ->whereNotNull('updated_at')
+                    ->get();
+```
+
+**whereDate / whereMonth / whereDay / whereYear / whereTime**
+
+```php
+$users = $db->table('users')
+                ->whereDate('created_at', '2016-12-31')
+                ->get();
+```
+
+```php
+$users = $db->table('users')
+                ->whereMonth('created_at', '12')
+                ->get();
+```
+
+```php
+$users = $db->table('users')
+                ->whereDay('created_at', '31')
+                ->get();
+```
+
+```php
+$users = $db->table('users')
+                ->whereYear('created_at', '2016')
+                ->get();
+```
+
+```php
+$users = $db->table('users')
+                ->whereTime('created_at', '=', '11:20:45')
+                ->get();
+```
+
+### Where Exists Clauses
+
+```php
+$users = $db->table('users')
+           ->whereExists(function ($query) {
+               $query->select([1])
+                     ->from('users')
+                     ->where('id', '=','1');
+           })
+           ->get();
+```
+
+#### orderBy
+
+```php
+$users = $db->table('users')
+                ->orderBy('name', 'desc')
+                ->get();
+```
+
+#### latest / oldest
+
+```php
+$user = $db->table('users')
+                ->latest()
+                ->first()
+                ->get();
+```
+
+#### inRandomOrder
+
+```php
+$randomUser = $db->table('users')
+                ->inRandomOrder()
+                ->first()
+                ->get();
+```
+
+#### groupBy / having
+
+```php
+$users = $db->table('users')
+                ->groupBy('account_id')
+                ->having('account_id', '>', 100)
+                ->get();
+```
+
+#### skip / take
+
+```php
+$users = $db->table('users')->skip(10)->take(5)->get();
+```
+
+## Inserts
+
+```php
+$db->table('users')->insert(
+    ['email' => 'test@test.com', 'active' => 0]
+);
+```
+
+Insert multiple records:
+
+```php
+$db->table('users')->insert([
+    ['email' => 'test@test.com', 'active' => 0],
+    ['email' => 'test1@test.com', 'active' => 1]
+]);
+```
+
+## Updates
+
+```php
+$result= $db->table('users')
+              ->where('id', 1)
+              ->update(['active' => 1]);
+```
+
+#### Update Or Insert
+
+```php
+$db->table('users')
+    ->updateOrInsert(
+        ['email' => 'test@test.com', 'name' => 'Marwa'], //data for update
+        ['active' => '1] // data for insert
+    );
+```
+
+## Deletes
+
+```php
+$db->table('users')->delete();
+
+$db->table('users')->where('active', '=', 0)->delete();
+```
+
+## Debugging
+
+```php
+//It will debug and die
+$db->table('users')->where('active', '=', 1)->dd();
+//it will only debug
+$db->table('users')->where('active', '=', 1)->dump();
+```

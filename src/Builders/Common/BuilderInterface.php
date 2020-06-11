@@ -6,10 +6,9 @@
  * @see      https://www.github.com/memran
  * @see      http://www.memran.me
  **/
-namespace MarwaDB\Exceptions;
 
-use Exception;
+namespace MarwaDB\Builders\Common;
 
-class NotFoundException extends Exception
+interface BuilderInterface
 {
 }

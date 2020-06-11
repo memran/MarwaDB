@@ -6,10 +6,10 @@
  * @see      https://www.github.com/memran
  * @see      http://www.memran.me
  **/
-namespace MarwaDB\Exceptions;
+namespace MarwaDB\Builders\Common\Sql;
 
 use Exception;
 
-class NotFoundException extends Exception
+class InvalidTableException extends Exception
 {
 }

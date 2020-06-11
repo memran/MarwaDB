@@ -12,6 +12,4 @@ use Exception;
 
 class ArrayNotFoundException extends Exception
 {
-
 }
-?>
