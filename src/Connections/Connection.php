@@ -379,8 +379,10 @@ class Connection implements ConnectionInterface
         if ($this->detectSelectSql($sqlQuery)) {
             if (!is_bool($stmt)) {
                 $this->setAffectedRows($stmt->rowCount());
+                return $stmt->fetchAll($this->getFetchMode());
+            } else {
+                return $stmt;
             }
-            return $stmt->fetchAll($this->getFetchMode());
         } else {
             return $res;
         }
