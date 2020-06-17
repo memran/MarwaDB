@@ -225,8 +225,11 @@ class Connection implements ConnectionInterface
      *
      * @return void
      */
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
+        if (empty($this->getConnection()['password']) || is_null($this->getConnection()['password'])) {
+            return "";
+        }
         return $this->getConnection()['password'];
     }
     /**
@@ -259,6 +262,7 @@ class Connection implements ConnectionInterface
      */
     public function connect() : bool
     {
+     
         //try to connect PDO
         try {
             $this->pdo = new PDO(
@@ -364,6 +368,7 @@ class Connection implements ConnectionInterface
      */
     protected function executeQuery($sqlQuery, $bindParam)
     {
+        $res=false;
         if (empty($bindParam)) {
             $stmt = $this->getPdo()->query($sqlQuery);
         } else { //if bind param is not empty
