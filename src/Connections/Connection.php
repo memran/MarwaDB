@@ -377,7 +377,9 @@ class Connection implements ConnectionInterface
         }
         //check query is startwith SELECT
         if ($this->detectSelectSql($sqlQuery)) {
-            $this->setAffectedRows($stmt->rowCount());
+            if (!is_bool($stmt)) {
+                $this->setAffectedRows($stmt->rowCount());
+            }
             return $stmt->fetchAll($this->getFetchMode());
         } else {
             return $res;
