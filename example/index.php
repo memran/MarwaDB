@@ -79,6 +79,15 @@
     $factory = new QueryBuilder($db, 'users');
     dump($factory->groupByRaw('username', 'password')->having('active = 1')->get());
 
+    // $user = [
+    //     'username' => 'admin',
+    //     'password' => '123',
+    //     'email' => 'test@test.com',
+    //     'active' => 1,
+    //     'remember_token' => "sdfsdfdfsdfsdfsdafafdsfsdfsdafsdfadadas"
+    // ];
+    // $res= $db->table('users')->insert($user);
+    // dump($res);
     //$factory = new QueryBuilder($db, 'schedule');
     //dump($factory->join('schedule_logs', 'schedule.command', '=', 'schedule_logs.name')->get());
 
@@ -245,38 +254,3 @@
     //whereMonth
     $users=$db->table("activecalls")->select()->whereMonth("connecttime", '06')->get();
     dump($users);
-
-    //insert and save thedata
-    // $result=$db->table('rule')->insert(
-    // 		[
-    // 			['rtype' => 'Operator6', 'permission' => 'Administrator'],
-    // 			['rtype' => 'Operator8', 'permission' => 'Administrator'],
-    // 		]
-    // )->save();
-    // dump($result);
-
-    //insert and retrieve last inserted id
- //    $result=$db->table('rule')->insertAndGetId(
-    // 		[
-    // 			['rtype' => 'Operator7', 'permission' => 'Administrator'],
-    // 			['rtype' => 'Operator9', 'permission' => 'Administrator'],
-    // 		]
-    // );
-    // dump($result);
-
-    //update the data
-    // $result = $db->table('rule')->update(
-    // 			['rtype' => 'Operator1', 'permission' => 'Administrator']
-    // )->where("id","117")->save();
-  //
-    // dump($result);
-
-    // $result = $db->table('rule')->update(
-    // 			['rtype' => 'Operator2', 'permission' => 'Administrator']
-    // )->where("id","109")->save();
-
-    // dump($result);
-
-    // $result = $db->table('rule')->delete()->where("id","118")->save();
-    // dump($result);
-    // die;

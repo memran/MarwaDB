@@ -51,7 +51,7 @@ class QueryBuilder
      *
      * @var [type]
      */
-    protected $_updateOrInsert;
+    protected $_updateOrInsert=[];
     /**
      * Undocumented variable
      *
@@ -123,7 +123,7 @@ class QueryBuilder
                 $res = $this->runQuery('insert', $value);
             }
         } else {
-            $res = $this->runQuery('insert', $data);
+            return $this->runQuery('insert', $data);
         }
         return $res;
     }
