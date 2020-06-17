@@ -12,7 +12,6 @@
     //first argument is connection array
     //second argument is debug
     $db = new DB($config['database']);
-
     
     $result = $db->rawQuery('SELECT * FROM users WHERE id = ?', [5]);
     dump($result);
