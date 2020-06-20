@@ -74,14 +74,14 @@ class Connection implements ConnectionInterface
      * @var [type]
      */
     protected static $_instance;
-    
+
     /**
      * ConnectionLocator
      *
      * @var [type]
      */
     protected $locator;
-    
+
     /**
      * Function constructor
      * @param  $dbConfig description
@@ -94,7 +94,7 @@ class Connection implements ConnectionInterface
         }
         $this->setDatabaseConfig($dbConfig);
     }
-    
+
     /**
      * Undocumented function
      *
@@ -108,7 +108,7 @@ class Connection implements ConnectionInterface
         }
         return self::$_instance;
     }
-    
+
     /**
      * ValidateAndBuild Function to validate database configuration and setup connection
      *@param   $config Array description
@@ -119,9 +119,9 @@ class Connection implements ConnectionInterface
         if (is_null($config) || empty($config)) {
             throw new InvalidException("Invalid Database Connection Paramters");
         }
-       
+
         $this->locator = new ConnectionLocator();
-        
+
         foreach ($config as $name => $connection) {
             $this->locator->addConnection($name, $connection);
         }
@@ -137,7 +137,7 @@ class Connection implements ConnectionInterface
         if (is_null($name)||empty($name)) {
             throw new InvalidException("Invalid Connection name");
         }
-            
+
         $this->default = $name;
         return $this;
     }
@@ -151,7 +151,7 @@ class Connection implements ConnectionInterface
     {
         return $this->default;
     }
-    
+
     /**
      * Undocumented function
      *
@@ -176,11 +176,11 @@ class Connection implements ConnectionInterface
             $this->getHost(),
             $this->getDB()
         );
-         
+
         if ($this->getDriver() === "mysql") {
             $dsnStr .= ';charset='.$this->getCharSet();
         }
-        
+
         return $dsnStr;
     }
 
@@ -252,7 +252,7 @@ class Connection implements ConnectionInterface
     {
         return $this->getConnection()['charset'];
     }
-    
+
     /**
      * [connect description]
      *
@@ -262,7 +262,7 @@ class Connection implements ConnectionInterface
      */
     public function connect() : bool
     {
-     
+
         //try to connect PDO
         try {
             $this->pdo = new PDO(
@@ -310,7 +310,7 @@ class Connection implements ConnectionInterface
     {
         return $this->fetchMode[$this->mode];
     }
-    
+
     /**
      * function to reconnect Database
      * @return  PDO description
@@ -331,7 +331,7 @@ class Connection implements ConnectionInterface
         if (empty($sqlQuery)) {
             throw new InvalidException("Query string is empty");
         }
-       
+
         try {
             return $this->executeQuery($this->removeWhiteSpace($sqlQuery), $bindParam);
         } catch (PDOException $e) {
@@ -370,9 +370,9 @@ class Connection implements ConnectionInterface
     {
         $stmt = $this->getPdo()->prepare($sqlQuery);
         $res = $stmt->execute($bindParam);
-      
+
         $this->setAffectedRows($stmt->rowCount());
-        
+
         //check query is startwith SELECT
         if ($this->detectSelectSql($sqlQuery)) {
             $res = $stmt->fetchAll($this->getFetchMode());
@@ -381,11 +381,11 @@ class Connection implements ConnectionInterface
             }
             return $res;
         }
-            
+
         return $res;
     }
 
-    
+
     /**
      * function to return number of rows from sql query
      * @return  int description
@@ -440,9 +440,9 @@ class Connection implements ConnectionInterface
      */
     protected function detectSelectSql(string $sql)
     {
-        return Util::startsWith($sql, 'SELECT');
+        return Util::startsWith(strtolower($sql), 'select');
     }
- 
+
     /**
      * Undocumented function
      *
