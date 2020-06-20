@@ -118,14 +118,18 @@ class QueryBuilder
      */
     public function insert(array $data)
     {
+        $count=0;
         if (Util::is_multi($data)) {
             foreach ($data as $key => $value) {
                 $res = $this->runQuery('insert', $value);
+                if ($res) {
+                    $count++;
+                }
             }
         } else {
             return $this->runQuery('insert', $data);
         }
-        return $res;
+        return $count;
     }
     /**
      * Undocumented function
@@ -153,7 +157,6 @@ class QueryBuilder
     {
         $this->setBuilderName($type);
         $this->setData($data);
-        //dump($this->buildQuery());
         return $this->_db->raw($this->buildQuery());
     }
     /**
@@ -274,8 +277,7 @@ class QueryBuilder
      */
     protected function buildQuery()
     {
-        //dump($this->_target);
-        //if ('select' === $this->_target) {
+      
         //get SelectBuilder Object based on Driver
         $builder = QueryFactory::getInstance(
             $this->getDriver(),

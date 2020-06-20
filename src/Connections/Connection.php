@@ -368,23 +368,18 @@ class Connection implements ConnectionInterface
      */
     protected function executeQuery($sqlQuery, $bindParam)
     {
-        //$res=false;
-        //if (empty($bindParam)) {
-        //   $stmt = $this->getPdo()->query($sqlQuery);
-        //} else { //if bind param is not empty
         $stmt = $this->getPdo()->prepare($sqlQuery);
         $res = $stmt->execute($bindParam);
-        //}
-       
-        // if (is_bool($stmt)) {
-        //     return $stmt;
-        // }
-       
+      
         $this->setAffectedRows($stmt->rowCount());
         
         //check query is startwith SELECT
         if ($this->detectSelectSql($sqlQuery)) {
-            return $stmt->fetchAll($this->getFetchMode());
+            $res = $stmt->fetchAll($this->getFetchMode());
+            if (is_array($res) && count($res) == 1) {
+                return $res[0];
+            }
+            return $res;
         }
             
         return $res;

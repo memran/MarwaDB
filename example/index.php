@@ -13,7 +13,7 @@
     //second argument is debug
     $db = new DB($config['database']);
     
-    $result = $db->rawQuery('SELECT * FROM users WHERE id = ?', [5]);
+    $result = $db->rawQuery('SELECT * FROM users WHERE id = ?', [1]);
     dump($result);
     dump("Total Rows Returned >>> ".$db->rows());
     
