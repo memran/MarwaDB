@@ -375,11 +375,7 @@ class Connection implements ConnectionInterface
 
         //check query is startwith SELECT
         if ($this->detectSelectSql($sqlQuery)) {
-            $res = $stmt->fetchAll($this->getFetchMode());
-            if (is_array($res) && count($res) == 1) {
-                return $res[0];
-            }
-            return $res;
+            return $stmt->fetchAll($this->getFetchMode());
         }
 
         return $res;
