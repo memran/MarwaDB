@@ -84,9 +84,9 @@ class QueryBuilder
     }
         
     /**
-     * @param  $type
-     * @param  $data
-     * @return array|Connections\Interfaces
+     * @param  string$type
+     * @param  array $data
+     * @return array
      * @throws InvalidArgumentException
      */
     protected function runQuery( $type, $data )
@@ -114,11 +114,11 @@ class QueryBuilder
             
         // Builder Director based on Driver
         $director = BuilderFactory::getInstance(
-            $builder,
-            $this->getBuilderName(),
-            $this->getTable(),
-            $this->getDriver()
-        );
+			            $builder,
+			            $this->getBuilderName(),
+			            $this->getTable(),
+			            $this->getDriver()
+			        );
             
         /**
          * set list of methods to build sql query
@@ -229,7 +229,7 @@ class QueryBuilder
         
     /**
      * @param  array $data
-     * @return int
+     * @return string
      * @throws InvalidArgumentException
      */
     public function insertGetId( array $data )
@@ -247,7 +247,7 @@ class QueryBuilder
         
     /**
      * @param  array $data
-     * @return array|Connections\Interfaces
+     * @return array|int
      * @throws InvalidArgumentException
      */
     public function update( array $data )
@@ -261,7 +261,7 @@ class QueryBuilder
     /**
      * @param  array $attributes
      * @param  array $values
-     * @return array|Connections\Interfaces
+     * @return array|int
      * @throws InvalidArgumentException
      */
     public function updateOrInsert( array $attributes, array $values )
@@ -275,7 +275,7 @@ class QueryBuilder
     }
         
     /**
-     * @return array|Connections\Interfaces\return
+     * @return array|int
      * @throws InvalidArgumentException
      */
     public function delete()
@@ -305,7 +305,7 @@ class QueryBuilder
     }
         
     /**
-     * @return array|Connections\Interfaces\return
+     * @return array|int
      * @throws InvalidArgumentException
      */
     public function get()
@@ -324,8 +324,8 @@ class QueryBuilder
     }
         
     /**
-     * @param  $method
-     * @param  $args
+     * @param  string $method
+     * @param  mixed $args
      * @return $this
      */
     public function __call( $method, $args )

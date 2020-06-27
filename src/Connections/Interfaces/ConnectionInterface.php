@@ -36,9 +36,9 @@ interface ConnectionInterface
     public function query( string $sql, array $bindParams = [] );
         
     /**
-     * @return int
+     * @return string
      */
-    public function getLastId() : int;
+    public function getLastId() : string ;
         
     /**
      * @param  string $type
@@ -75,4 +75,21 @@ interface ConnectionInterface
      * @return mixed
      */
     public function commitTrans();
+	
+	/**
+	 * @return $this
+	 */
+    public function enableLog();
+	
+	/**
+	 * @return array
+	 */
+    public function getQueryLog(): array;
+	
+	/**
+	 * @return string
+	 */
+    public function getDriver(): string ;
+    
+    
 }

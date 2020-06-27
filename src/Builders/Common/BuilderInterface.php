@@ -1,14 +1,23 @@
 <?php
-/**
- * @author    Mohammad Emran <memran.dhk@gmail.com>
- * @copyright 2018
- *
- * @see https://www.github.com/memran
- * @see http://www.memran.me
- **/
-
-namespace MarwaDB\Builders\Common;
-
-interface BuilderInterface
-{
-}
+	
+	namespace MarwaDB\Builders\Common;
+	
+	interface BuilderInterface {
+		
+		/**
+		 * @param string $name
+		 * @return mixed
+		 */
+		public function table(string $name);
+		
+		public function setData(array $data);
+		/**
+		 * @return mixed
+		 */
+		public function formatSql();
+		
+		/**
+		 * @return string
+		 */
+		public function getSql();
+	}

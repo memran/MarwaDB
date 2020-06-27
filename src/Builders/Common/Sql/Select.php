@@ -28,11 +28,11 @@
 		private $__distinct;
 		
 		/**
-		 * @var int
+		 * @var string|null
 		 */
 		private $__limit;
 		/**
-		 * @var int
+		 * @var string|null
 		 */
 		private $__offset;
 		
@@ -57,7 +57,7 @@
 		}
 		
 		/**
-		 * @param $field
+		 * @param string|array $field
 		 * @throws Exception
 		 */
 		public function addCols( $field )
@@ -70,14 +70,18 @@
 			{
 				$fields = $field;
 			}
-			foreach ( $fields as $key => $value )
+			if(is_array($fields))
 			{
-				$this->addCol($value);
+				foreach ( $fields as $key => $value )
+				{
+					$this->addCol($value);
+				}
 			}
+			
 		}
 		
 		/**
-		 * @param $field
+		 * @param string $field
 		 * @throws Exception
 		 */
 		public function addCol( $field )

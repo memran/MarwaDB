@@ -2,6 +2,8 @@
 	
 	namespace MarwaDB\Builders\Common\Sql;
 	
+	use Exception;
+	
 	class Where {
 		
 		/**
@@ -18,9 +20,9 @@
 		protected $_subWhereType;
 		
 		/**
-		 * @param $column
-		 * @param $condition
-		 * @param $value
+		 * @param mixed $column
+		 * @param string $condition
+		 * @param mixed $value
 		 */
 		public function addWhere( $column, $condition, $value )
 		{
@@ -28,9 +30,10 @@
 		}
 		
 		/**
-		 * @param $column
-		 * @param $condition
-		 * @param $value
+		 * @param mixed $column
+		 * @param string $condition
+		 * @param mixed $value
+		 * @throws Exception
 		 */
 		public function addOrWhere( $column, $condition, $value )
 		{
@@ -45,9 +48,10 @@
 		}
 		
 		/**
-		 * @param $column
-		 * @param $condition
-		 * @param $value
+		 * @param mixed $column
+		 * @param string $condition
+		 * @param mixed $value
+		 * @throws Exception
 		 */
 		public function addAndWhere( $column, $condition, $value )
 		{
@@ -62,11 +66,12 @@
 		}
 		
 		/**
-		 * @param string $column
+		 * @param mixed $column
 		 * @param string $condition
-		 * @param $value
+		 * @param mixed $value
+		 * @throws Exception
 		 */
-		public function addSubWhere( string $column, string $condition, $value )
+		public function addSubWhere(  $column,  $condition, $value )
 		{
 			if ( isset($this->_whereSql) )
 			{
@@ -79,9 +84,9 @@
 		}
 		
 		/**
-		 * @param $column
-		 * @param $value1
-		 * @param $value2
+		 * @param mixed $column
+		 * @param mixed $value1
+		 * @param mixed $value2
 		 */
 		public function addWhereBetween( $column, $value1, $value2 )
 		{
@@ -90,9 +95,9 @@
 		}
 		
 		/**
-		 * @param $column
-		 * @param $value1
-		 * @param $value2
+		 * @param mixed $column
+		 * @param mixed $value1
+		 * @param mixed $value2
 		 */
 		public function addOrWhereBetween( $column, $value1, $value2 )
 		{
@@ -101,9 +106,9 @@
 		}
 		
 		/**
-		 * @param $column
-		 * @param $value1
-		 * @param $value2
+		 * @param mixed $column
+		 * @param mixed $value1
+		 * @param mixed $value2
 		 */
 		public function addWhereNotBetween( $column, $value1, $value2 )
 		{
@@ -112,9 +117,9 @@
 		}
 		
 		/**
-		 * @param $column
-		 * @param $value1
-		 * @param $value2
+		 * @param mixed $column
+		 * @param mixed $value1
+		 * @param mixed $value2
 		 */
 		public function addOrWhereNotBetween( $column, $value1, $value2 )
 		{
@@ -123,8 +128,8 @@
 		}
 		
 		/**
-		 * @param $column
-		 * @param $values
+		 * @param mixed $column
+		 * @param array $values
 		 */
 		public function addWhereIn( $column, $values )
 		{
@@ -134,39 +139,39 @@
 		}
 		
 		/**
-		 * @param $column
-		 * @param $values
+		 * @param mixed $column
+		 * @param array $values
 		 */
-		public function addWhereNotIn( $column, $values )
+		public function addWhereNotIn( $column, array $values )
 		{
-			$datas = implode(',', $values);
+			$data = implode(',', $values);
 			//WHERE column_name IN (value1,value2);
-			$this->_whereSql = "WHERE {$column} NOT IN ({$datas})";
+			$this->_whereSql = "WHERE {$column} NOT IN ({$data})";
 		}
 		
 		/**
-		 * @param $column
-		 * @param $values
+		 * @param mixed $column
+		 * @param array $values
 		 */
-		public function addOrWhereIn( $column, $values )
+		public function addOrWhereIn( $column, array $values )
 		{
-			$datas = implode(',', $values);
-			$this->_whereSql .= " OR {$column} IN ({$datas})";
+			$data = implode(',', $values);
+			$this->_whereSql .= " OR {$column} IN ({$data})";
 		}
 		
 		/**
-		 * @param $column
-		 * @param $values
+		 * @param mixed $column
+		 * @param array $values
 		 */
-		public function addOrWhereNotIn( $column, $values )
+		public function addOrWhereNotIn( $column, array $values )
 		{
-			$datas = implode(',', $values);
+			$data = implode(',', $values);
 			//WHERE column_name IN (value1,value2);
-			$this->_whereSql .= " OR {$column} NOT IN ({$datas})";
+			$this->_whereSql .= " OR {$column} NOT IN ({$data})";
 		}
 		
 		/**
-		 * @param $column
+		 * @param mixed $column
 		 */
 		public function addWhereNull( $column )
 		{
@@ -175,7 +180,7 @@
 		}
 		
 		/**
-		 * @param $column
+		 * @param mixed $column
 		 */
 		public function addWhereNotNull( $column )
 		{
@@ -184,7 +189,7 @@
 		}
 		
 		/**
-		 * @param $column
+		 * @param mixed $column
 		 */
 		public function addOrWhereNull( $column )
 		{
@@ -193,7 +198,7 @@
 		}
 		
 		/**
-		 * @param $column
+		 * @param mixed $column
 		 */
 		public function addOrWhereNotNull( $column )
 		{
@@ -203,7 +208,7 @@
 		
 		/**
 		 * @param string $column
-		 * @param $value
+		 * @param string $value
 		 */
 		public function addWhereDate( string $column, $value )
 		{
@@ -212,7 +217,7 @@
 		
 		/**
 		 * @param string $column
-		 * @param $value
+		 * @param string $value
 		 */
 		public function addWhereDay( string $column, $value )
 		{
@@ -221,7 +226,7 @@
 		
 		/**
 		 * @param string $column
-		 * @param $value
+		 * @param string $value
 		 */
 		public function addWhereYear( string $column, $value )
 		{
@@ -230,7 +235,7 @@
 		
 		/**
 		 * @param string $column
-		 * @param $value
+		 * @param string $value
 		 */
 		public function addWhereMonth( string $column, $value )
 		{
@@ -239,7 +244,7 @@
 		
 		/**
 		 * @param string $column
-		 * @param $value
+		 * @param string $value
 		 */
 		public function addWhereTime( string $column, $value )
 		{

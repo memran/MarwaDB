@@ -1,21 +1,22 @@
 <?php
-/**
- * @author    Mohammad Emran <memran.dhk@gmail.com>
- * @copyright 2018
- *
- * @see https://www.github.com/memran
- * @see http://www.memran.me
- **/
-
-namespace MarwaDB\Builders\Common;
-
-use MarwaDB\Exceptions\ArrayNotFoundException;
-use MarwaDB\Exceptions\NotFoundException;
-use MarwwDB\Builders\Common\BuilderInterface;
-
-abstract class AbstractQueryBuilder
-{
-    abstract public function __construct(BuilderInterface $builder_in);
-    abstract public function buildQuery();
-    abstract public function getSql();
-}
+	
+	namespace MarwaDB\Builders\Common;
+	
+	abstract class AbstractQueryBuilder {
+		
+		/**
+		 * AbstractQueryBuilder constructor.
+		 * @param BuilderInterface $builder_in
+		 */
+		abstract public function __construct( BuilderInterface $builder_in );
+		
+		/**
+		 * @return mixed
+		 */
+		abstract public function buildQuery();
+		
+		/**
+		 * @return mixed
+		 */
+		abstract public function getSql();
+	}

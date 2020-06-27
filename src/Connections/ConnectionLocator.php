@@ -19,7 +19,11 @@ class ConnectionLocator
      */
     public function addConnection( string $name, array $connection )
     {
+    	if(empty($connection))
+    		return false;
+    	
         $validator = new ConnectionValidator();
+        
         if ($validator->valid($connection) ) {
             $this->_connections[ $name ] = $connection;
         }
