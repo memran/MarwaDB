@@ -12,7 +12,7 @@
     //first argument is connection array
     //second argument is debug
     $db = new DB($config['database']);
-    
+    $db->enableQueryLog();
     $result = $db->rawQuery('SELECT * FROM users WHERE id = ?', [1]);
     dump($result);
     dump("Total Rows Returned >>> ".$db->rows());
@@ -28,7 +28,9 @@
     dump("Result with Specific Connection Name >>> ");
     dump($result);
 
- 
+    dump($db->getQueryLog());
+    die();
+
     $result=$db->connection()->rawQuery('SELECT * FROM users WHERE id = ?', [1]);
     dump("Result with Default Connection >>> ");
     dump($result);

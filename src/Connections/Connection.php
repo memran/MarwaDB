@@ -41,8 +41,9 @@ class Connection implements ConnectionInterface
             'object' => PDO::FETCH_OBJ
     ];
     /**
-     * var default connection name
-     * */
+     *
+     * @var string
+     */
     protected $default;
 
     /**
@@ -54,6 +55,19 @@ class Connection implements ConnectionInterface
      * var int
      * */
     protected $numRows=false;
+
+    /**
+     *
+     * @var bool
+     */
+    protected $logging = false;
+
+    /**
+     * Undocumented variable
+     *
+     * @var array
+     */
+    protected $sqlQueryLog=[];
 
     /**
      * The default PDO connection options.
@@ -320,7 +334,21 @@ class Connection implements ConnectionInterface
         $this->pdo = null;
         return $this->connect();
     }
+    /**
+     * Enable Query Log
+     *
+     * @return self
+     */
+    public function enableLog()
+    {
+        $this->logging = true;
+        return $this;
+    }
 
+    public function getQueryLog()
+    {
+        return $this->sqlQueryLog;
+    }
     /**
      * function database query execution
      * @param  $sqlQuery description
@@ -368,12 +396,26 @@ class Connection implements ConnectionInterface
      */
     protected function executeQuery($sqlQuery, $bindParam)
     {
+        /**
+         *  if Sql log is enable then store sql and binding to the array for further usage
+         */
+        if ($this->logging) {
+            array_push($this->sqlQueryLog, ['sql'=>$sqlQuery,'binding'=>$bindParam]);
+        }
+        /**
+         *  Executing sql query
+         */
         $stmt = $this->getPdo()->prepare($sqlQuery);
         $res = $stmt->execute($bindParam);
 
+        /**
+         * Read Affected rows
+         */
         $this->setAffectedRows($stmt->rowCount());
 
-        //check query is startwith SELECT
+        /**
+         * check query is startwith SELECT
+         */
         if ($this->detectSelectSql($sqlQuery)) {
             return $stmt->fetchAll($this->getFetchMode());
         }

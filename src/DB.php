@@ -216,4 +216,23 @@ class DB
             throw new Exception('Transaction Failed');
         }
     }
+    /**
+     * Undocumented function
+     *
+     * @return $this
+     */
+    public function enableQueryLog()
+    {
+        $this->__conn->enableLog();
+        return $this;
+    }
+    /**
+     * Undocumented function
+     *
+     * @return array
+     */
+    public function getQueryLog()
+    {
+        return $this->__conn->getQueryLog();
+    }
 }
