@@ -451,8 +451,9 @@ dump($db->getQueryLog());
 ```php
 dump($db->table('users')->where('active', '=', 1)->toSql());
 ```
-## License
-The MIT License (MIT). Please see  [License File](https://github.com/memran/MarwaDB/blob/master/LICENSE.md) for more information.
-
 ## Contribution
-Please see [CONTRIBUTING](https://github.com/memran/MarwaDB/blob/master/CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](https://github.com/memran/MarwaDB/blob/master/CONTRIBUTING.MD) for details.
+
+## License
+The MIT License (MIT). Please see  [License File](https://github.com/memran/MarwaDB/blob/master/LICENSE.MD) for more information.
+
