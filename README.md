@@ -1,6 +1,6 @@
-[![Latest Stable Version](https://poser.pugx.org/phpunit/phpunit/v)](//packagist.org/packages/phpunit/phpunit) [![Total Downloads](https://poser.pugx.org/phpunit/phpunit/downloads)](//packagist.org/packages/phpunit/phpunit) [![Latest Unstable Version](https://poser.pugx.org/phpunit/phpunit/v/unstable)](//packagist.org/packages/phpunit/phpunit) [![License](https://poser.pugx.org/phpunit/phpunit/license)](//packagist.org/packages/phpunit/phpunit)
+[![Build Status](https://travis-ci.org/memran/MarwaDB.svg?branch=master)](https://travis-ci.org/memran/MarwaDB) [![Latest Stable Version](https://poser.pugx.org/memran/MarwaDB)](//packagist.org/packages/memran/MarwaDB) [![Total Downloads](https://poser.pugx.org/memran/MarwaDB/downloads)](//packagist.org/packages/memran/MarwaDB) [![Latest Unstable Version](https://poser.pugx.org/memran/MarwaDB)](//packagist.org/packages/memran/MarwaDB) [![License](https://poser.pugx.org/memran/MarwaDB/LICENSE.MD)](//packagist.org/packages/memran/MarwaDB)
 
-[![Build Status](https://travis-ci.org/memran/MarwaDB.svg?branch=master)](https://travis-ci.org/memran/MarwaDB)
+<a href="https://phpstan.org/"><img src="https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat" alt="PHPStan Enabled"></a>
 
 # MarwaDB for MarwaPHP Framework
 
