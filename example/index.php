@@ -28,7 +28,12 @@
     dump("Result with Specific Connection Name >>> ");
     dump($result);
 
+    dump("Query Log Print");
     dump($db->getQueryLog());
+    
+    dump("Raw Sql String Echo");
+    dump($db->table('users')->select(['username', 'email as user_email'])->toSql());
+
     die();
 
     $result=$db->connection()->rawQuery('SELECT * FROM users WHERE id = ?', [1]);

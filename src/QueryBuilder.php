@@ -340,7 +340,7 @@ class QueryBuilder
     {
         return $this->buildQuery();
     }
-       
+    
     /**
      * Undocumented function
      *
@@ -352,5 +352,15 @@ class QueryBuilder
     {
         $this->_methods[$method]=$args;
         return $this;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function toSql()
+    {
+        return $this->buildQuery();
     }
 }
