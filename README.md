@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/memran/MarwaDB.svg?branch=master)](https://travis-ci.org/memran/MarwaDB) [![Latest Stable Version](https://poser.pugx.org/memran/MarwaDB)](//packagist.org/packages/memran/MarwaDB) [![Total Downloads](https://poser.pugx.org/memran/MarwaDB/downloads)](//packagist.org/packages/memran/MarwaDB) [![Latest Unstable Version](https://poser.pugx.org/memran/MarwaDB)](//packagist.org/packages/memran/MarwaDB) [![License](https://poser.pugx.org/memran/MarwaDB/LICENSE.MD)](//packagist.org/packages/memran/MarwaDB)
+[![Build Status](https://travis-ci.org/memran/MarwaDB.svg?branch=master)](https://travis-ci.org/memran/MarwaDB)  [![Total Downloads](https://poser.pugx.org/memran/MarwaDB/downloads)](//packagist.org/packages/memran/MarwaDB) [![License](https://poser.pugx.org/memran/marwadb/license)](//packagist.org/packages/memran/marwadb) [![Dependents](https://poser.pugx.org/memran/marwadb/dependents)](//packagist.org/packages/memran/marwadb)
 
 <a href="https://phpstan.org/"><img src="https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat" alt="PHPStan Enabled"></a>
 
