@@ -20,7 +20,7 @@ Just install the package, add the config and it is ready to use!
 
 ## Installation
 
-This package is installable and PSR-4 autoloadable via Composer as
+This package is installable and PSR-4 autoloadable via [Composer](https://packagist.org/packages/memran/marwadb) as
 
     composer require memran/marwadb:dev-master
 
@@ -29,21 +29,41 @@ This package is installable and PSR-4 autoloadable via Composer as
 Create a new DB class, and pass the configruation array to MarwaDB:
 
 ```php
-        require_once('../vendor/autoload.php');
-        use MarwaDB\DB;
-        $config = [
-	        'default'=>
-		        [
-			       'driver' => "mysql",
-			       'host' => "localhost",
-			       'port' => 3306,
-			       'database' => "test",
-			       'username' => "root",
-			       'password' => "1234",
-			       'charset' => "utf8mb4",
-		        ]
-	    ];
-    $db = new DB($config);
+require_once('../vendor/autoload.php');
+use MarwaDB\DB;
+$config = [
+    'default'=>
+        [
+           'driver' => "mysql",
+           'host' => "localhost",
+           'port' => 3306,
+           'database' => "test",
+           'username' => "root",
+           'password' => "1234",
+           'charset' => "utf8mb4",
+        ],
+    'write'=>
+        [
+           'driver' => "mysql",
+           'host' => "localhost",
+           'port' => 3306,
+           'database' => "test",
+           'username' => "root",
+           'password' => "1234",
+           'charset' => "utf8mb4",
+        ],
+    'read'=>
+        [
+           'driver' => "mysql",
+           'host' => "localhost",
+           'port' => 3306,
+           'database' => "test",
+           'username' => "root",
+           'password' => "1234",
+           'charset' => "utf8mb4",
+        ]
+];
+$db = new DB($config);
 ```
 
 ### DB Raw Query
@@ -420,3 +440,19 @@ $db->table('users')->where('active', '=', 1)->dd();
 //it will only debug
 $db->table('users')->where('active', '=', 1)->dump();
 ```
+
+## Enable Sql Logging
+```php
+$db->enableQueryLog();
+$db->table('users')->where('active', '=', 1)->get();
+dump($db->getQueryLog());
+```
+## Print Sql Query
+```php
+dump($db->table('users')->where('active', '=', 1)->toSql());
+```
+## License
+The MIT License (MIT). Please see  [License File](https://github.com/memran/MarwaDB/blob/master/LICENSE.md) for more information.
+
+## Contribution
+Please see [CONTRIBUTING](https://github.com/memran/MarwaDB/blob/master/CONTRIBUTING.md) for details.

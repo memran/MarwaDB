@@ -3,8 +3,8 @@
  * @author    Mohammad Emran <memran.dhk@gmail.com>
  * @copyright 2018
  *
- * @see      https://www.github.com/memran
- * @see      http://www.memran.me
+ * @see https://www.github.com/memran
+ * @see http://www.memran.me
  **/
 
 namespace MarwaDB;
@@ -18,7 +18,7 @@ class BuilderFactory
     /**
      * Undocumented function
      *
-     * @param [type] $instance
+     * @param  [type] $instance
      * @return void
      */
     public static function getInstance(BuilderInterface $instance, string $type, string $table, string $driver)

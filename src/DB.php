@@ -1,235 +1,236 @@
 <?php
-/**
- * @author    Mohammad Emran <memran.dhk@gmail.com>
- * @copyright 2018
- *
- * @see      https://www.github.com/memran
- * @see      http://www.memran.me
- **/
-
-namespace MarwaDB;
-
-use MarwaDB\QueryBuilder;
-use MarwaDB\Connections\Connection;
-use MarwaDB\Connections\Interfaces\ConnectionInterface;
-use MarwaDB\Exceptions\InvalidArgumentException;
-
-use MarwaDB\Debug;
-
+    
+    namespace MarwaDB;
+    
+    use Exception;
+    use MarwaDB\Connections\Connection;
+    use MarwaDB\Connections\Interfaces\ConnectionInterface;
+    use MarwaDB\Exceptions\InvalidArgumentException;
+    
 class DB
 {
-
+        
     /**
-     * database connection
-     * */
-    private $__conn;
-
-    /*
-    * var raw PDO
-    */
-    protected $pdo=null;
-
-    /**
-     * [protected description]
-     *
-     * @var [type]
+     * @var PDO
      */
-    protected $result=null;
+    protected $pdo = null;
+        
+        
     /**
-     * function __construct
-     * */
-    public function __construct($dbArray)
+     * @var array
+     */
+    protected $result = [];
+    /**
+     * @var ConnectionInterface|void
+     */
+    private $__conn;
+        
+    /**
+     * DB constructor.
+     *
+     * @param  array $dbArray
+     * @throws \Exception
+     */
+    public function __construct( array $dbArray )
     {
+        if (empty($dbArray) ) {
+            throw new Exception("Database Configuration is empty");
+        }
+            
         $this->__conn = Connection::getInstance($dbArray);
     }
-    
+        
     /**
-     * Function to read pdo connection status report
-     *
-     * @return void
+     * @return string
      */
     public function status()
     {
         return $this->__conn->status();
     }
-
+        
     /**
-     * function database rawQuery alias
-     * @param  $sqlQuery description
-     * @param  $bindParam
-     * */
-    public function raw($sqlQuery, $bindParam=[])
+     * @param  $sqlQuery
+     * @param  array $bindParam
+     * @return array|Connections\Interfaces\return
+     */
+    public function raw( $sqlQuery, $bindParam = [] )
     {
         return $this->rawQuery($sqlQuery, $bindParam);
     }
-
+        
     /**
-     * function database query
-     * @param  $sqlQuery description
-     * @param  $bindParam
-     * */
-    public function rawQuery($sqlQuery, $bindParam=[])
+     * @param  $sqlQuery
+     * @param  array $bindParam
+     * @return array|Connections\Interfaces\return
+     */
+    public function rawQuery( $sqlQuery, $bindParam = [] )
     {
         $this->result = $this->__conn->query($sqlQuery, $bindParam);
+            
         return $this->result;
     }
-
+        
     /**
-     * function to retrieve conenction pdo
-     * @return  $this description
-     * */
-    public function connection(string $name='')
+     * @param  string $name
+     * @return $this
+     */
+    public function connection( string $name = '' )
     {
         $this->pdo = $this->__conn->getConnection($name);
+            
         return $this;
     }
-
+        
     /**
-     * function to retrieve conenction pdo
-     * @return  Connection description
-     * */
+     * @return ConnectionInterface
+     */
     public function getConnection() : ConnectionInterface
     {
         return $this->__conn;
     }
+        
     /**
-     * get Connection Driver
-     *
-     * @return string
+     * @return int
      */
-    public function getDriver(): string
-    {
-        return $this->__conn->getDriver();
-    }
-
-    /**
-     * function to return of result affetched rows
-     * @return  int number of rows
-     * */
     public function rows() : int
     {
         return $this->__conn->getAffectedRows();
     }
-
+        
     /**
-     * [setFetchMode description]
-     *
-     * @method setFetchMode
-     *
-     * @param [type] $type [description]
+     * @param  string $type
+     * @return $this
      */
-    public function setFetchMode(string $type='array')
+    public function setFetchMode( string $type = 'array' )
     {
         $this->__conn->setFetchMode($type);
+            
         return $this;
     }
-
+        
     /**
-     * function to move on QueryBuilder Class
-     * @param   $name table name
-     * @return  QueryBuilder description
-     * */
-    public function table(string $name)
+     * @param  string $name
+     * @return QueryBuilder
+     * @throws InvalidArgumentException
+     */
+    public function table( string $name )
     {
-        if (empty($name)) {
+        if (empty($name) ) {
             throw new InvalidArgumentException("Table name is empty");
         }
         $query = new QueryBuilder($this, $name);
         $query->setDriver($this->getDriver());
-        
+            
         return $query;
     }
+        
     /**
-     * alias function of database select
-     * */
-    public function select(string $sql, array $params=[])
+     * @return string
+     */
+    public function getDriver() : string
+    {
+        return $this->__conn->getDriver();
+    }
+        
+    /**
+     * @param  string $sql
+     * @param  array  $params
+     * @return array|Connections\Interfaces\return
+     */
+    public function select( string $sql, array $params = [] )
     {
         return $this->rawQuery($sql, $params);
     }
-
+        
     /**
-     * alias function of query for insert data
-     * */
-    public function insert(string $sql, array $params=[])
+     * @param  string $sql
+     * @param  array  $params
+     * @return array|Connections\Interfaces\return
+     */
+    public function insert( string $sql, array $params = [] )
     {
         return $this->rawQuery($sql, $params);
     }
+        
     /**
-     * alias function of Query
-     * */
-    public function update(string $sql, array $params=[])
+     * @param  string $sql
+     * @param  array  $params
+     * @return array|Connections\Interfaces\return
+     */
+    public function update( string $sql, array $params = [] )
     {
         return $this->rawQuery($sql, $params);
     }
-
+        
     /**
-     * alias function to delete data
-     * */
-    public function delete(string $sql, array $params=[])
+     * @param  string $sql
+     * @param  array  $params
+     * @return array|Connections\Interfaces\return
+     */
+    public function delete( string $sql, array $params = [] )
     {
         return $this->rawQuery($sql, $params);
     }
-
+        
     /**
-     * begin Transaction
-     * */
-
-    public function beginTrans()
+     * @param  callable $function_name
+     * @throws InvalidArgumentException
+     * @throws Exception
+     */
+    public function transaction( callable $function_name )
     {
-        $this->__conn->beginTrans();
-    }
-
-    /**
-     * commit transaction
-     * */
-    public function commit()
-    {
-        $this->__conn->commitTrans();
-    }
-
-    /**
-     * rollback Transaction
-     * */
-    public function rollback()
-    {
-        $this->__conn->rollBackTrans();
-    }
-
-
-    /**
-     * function for atabase transaction with callback function
-     *@param   $function_name description
-     * */
-    public function transaction(callable $function_name)
-    {
-        if (!is_callable($function_name)) {
+        if (!is_callable($function_name) ) {
             throw new InvalidArgumentException('Parameter is not callable!');
         }
-
-        //try to call function with start/commit transaction
-        try {
+            
+        try
+        {
             $this->beginTrans();
             $function_name($this);
             $this->commit();
-        } catch (Exception $e) {
+        } catch ( Exception $e )
+        {
             $this->rollback();
             throw new Exception('Transaction Failed');
         }
     }
+        
     /**
-     * Undocumented function
      *
+     */
+    public function beginTrans()
+    {
+        $this->__conn->beginTrans();
+    }
+        
+    /**
+     *
+     */
+    public function commit()
+    {
+        $this->__conn->commitTrans();
+    }
+        
+    /**
+     *
+     */
+    public function rollback()
+    {
+        $this->__conn->rollBackTrans();
+    }
+        
+    /**
      * @return $this
      */
     public function enableQueryLog()
     {
         $this->__conn->enableLog();
+            
         return $this;
     }
+        
     /**
-     * Undocumented function
-     *
-     * @return array
+     * @return mixed
      */
     public function getQueryLog()
     {

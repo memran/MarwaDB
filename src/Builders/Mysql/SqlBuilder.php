@@ -3,8 +3,8 @@
  * @author    Mohammad Emran <memran.dhk@gmail.com>
  * @copyright 2018
  *
- * @see      https://www.github.com/memran
- * @see      http://www.memran.me
+ * @see https://www.github.com/memran
+ * @see http://www.memran.me
  **/
 
 namespace MarwaDB\Builders\Mysql;
@@ -59,7 +59,7 @@ class SqlBuilder extends AbstractQueryBuilder
      * Undocumented function
      *
      * @param BuilderInterface $builder_in
-     * @param string $type
+     * @param string           $type
      */
     public function __construct(BuilderInterface $builder_in, string $type, string $table)
     {
@@ -70,7 +70,7 @@ class SqlBuilder extends AbstractQueryBuilder
     /**
      * Undocumented function
      *
-     * @param [type] $methods
+     * @param  [type] $methods
      * @return void
      */
     public function setMethods($methods)
@@ -111,7 +111,7 @@ class SqlBuilder extends AbstractQueryBuilder
     /**
      * function to set data in insert/update query
      *
-     * @param array $data
+     * @param  array $data
      * @return void
      */
     public function setData(array $data)
@@ -122,7 +122,7 @@ class SqlBuilder extends AbstractQueryBuilder
     /**
      * Undocumented function
      *
-     * @param array $data
+     * @param  array $data
      * @return void
      */
     public function updateOrInsert(array $data)
@@ -192,8 +192,8 @@ class SqlBuilder extends AbstractQueryBuilder
     /**
      * Undocumented function
      *
-     * @param [type] $method
-     * @param [type] $args
+     * @param  [type] $method
+     * @param  [type] $args
      * @return void
      */
     private function execute($method, $args)

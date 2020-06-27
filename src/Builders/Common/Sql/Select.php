@@ -3,8 +3,8 @@
  * @author    Mohammad Emran <memran.dhk@gmail.com>
  * @copyright 2018
  *
- * @see      https://www.github.com/memran
- * @see      http://www.memran.me
+ * @see https://www.github.com/memran
+ * @see http://www.memran.me
  **/
 namespace MarwaDB\Builders\Common\Sql;
 
@@ -87,7 +87,7 @@ class Select
     /**
      * Undocumented function
      *
-     * @param string $name
+     * @param  string $name
      * @return void
      */
     public function setFrom(string $name)
@@ -115,7 +115,7 @@ class Select
     /**
      * Undocumented function
      *
-     * @param [type] $field
+     * @param  [type] $field
      * @return void
      */
     public function addCol($field)
@@ -130,7 +130,7 @@ class Select
     /**
      * Undocumented function
      *
-     * @param string $field
+     * @param  string $field
      * @return void
      */
     public function addCols($field)
@@ -212,8 +212,9 @@ class Select
 
     /**
      * function for offset
-     * @param   $offset description
-     * @return  $this description
+     *
+     * @param  $offset description
+     * @return $this description
      * */
     public function setOffset($offset=0) : void
     {
@@ -222,8 +223,9 @@ class Select
 
     /**
      * function for limit sql data
-     * @param   $limit description
-     * @return  $this description
+     *
+     * @param  $limit description
+     * @return $this description
      * */
     public function setLimit($limit=25) : void
     {
@@ -250,10 +252,11 @@ class Select
     }
     
     /**
-    * function for orderByRaw
-    * @param  string $columns description
-    * @return  $this description
-    * */
+     * function for orderByRaw
+     *
+     * @param  string $columns description
+     * @return $this description
+     * */
     public function orderByRaw(string $columns) : void
     {
         //check if columns is null
@@ -274,10 +277,11 @@ class Select
     }
 
     /**
-      * function for havingRaw for group condition
-      * @param  string $columns description
-      * @return  $this description
-      * */
+     * function for havingRaw for group condition
+     *
+     * @param  string $columns description
+     * @return $this description
+     * */
     public function havingRaw(string $columns="*")
     {
         //check if columns is null
@@ -299,7 +303,7 @@ class Select
     /**
      * Undocumented function
      *
-     * @param string $group
+     * @param  string $group
      * @return void
      */
     public function addGroupBy(string $group)

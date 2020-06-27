@@ -3,8 +3,8 @@
  * @author    Mohammad Emran <memran.dhk@gmail.com>
  * @copyright 2018
  *
- * @see      https://www.github.com/memran
- * @see      http://www.memran.me
+ * @see https://www.github.com/memran
+ * @see http://www.memran.me
  **/
 
 namespace MarwaDB\Builders\Common;
@@ -42,7 +42,7 @@ class CommonUpdateBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param string $name
+     * @param  string $name
      * @return void
      */
     public function table(string $name)
@@ -52,7 +52,7 @@ class CommonUpdateBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param array $data
+     * @param  array $data
      * @return void
      */
     public function setData(array $data)

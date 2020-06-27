@@ -3,8 +3,8 @@
  * @author    Mohammad Emran <memran.dhk@gmail.com>
  * @copyright 2018
  *
- * @see      https://www.github.com/memran
- * @see      http://www.memran.me
+ * @see https://www.github.com/memran
+ * @see http://www.memran.me
  **/
 
 namespace MarwaDB\Builders\Common;
@@ -78,7 +78,7 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param [type] $name
+     * @param  [type] $name
      * @return void
      */
     public function table(string $name)
@@ -89,7 +89,7 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param array $cols
+     * @param  array $cols
      * @return void
      */
     public function select($cols=[])
@@ -115,7 +115,7 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param string $column
+     * @param  string $column
      * @return void
      */
     public function count(string $column ="*")
@@ -127,7 +127,7 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param string $column
+     * @param  string $column
      * @return void
      */
     public function avg(string $column)
@@ -139,7 +139,7 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param string $column
+     * @param  string $column
      * @return void
      */
     public function sum(string $column)
@@ -151,7 +151,7 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param string $column
+     * @param  string $column
      * @return void
      */
     public function min(string $column)
@@ -163,7 +163,7 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param string $column
+     * @param  string $column
      * @return void
      */
     public function max(string $column)
@@ -186,7 +186,7 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param integer $limit
+     * @param  integer $limit
      * @return void
      */
     public function limit(int $limit)
@@ -199,7 +199,7 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param integer $limit
+     * @param  integer $limit
      * @return void
      */
     public function take(int $limit)
@@ -210,7 +210,7 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param integer $offset
+     * @param  integer $offset
      * @return void
      */
     public function offset(int $offset)
@@ -221,7 +221,7 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param integer $offset
+     * @param  integer $offset
      * @return void
      */
     public function skip(int $offset)
@@ -268,8 +268,9 @@ class CommonSelectBuilder implements BuilderInterface
 
     /**
      * function for orderby sql statement
-     * @param   $colName description
-     * @param   $sortBy description
+     *
+     * @param $colName description
+     * @param $sortBy  description
      * */
     public function orderBy(string $colName, string $sortBy='ASC')
     {
@@ -290,7 +291,7 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param string $condition
+     * @param  string $condition
      * @return void
      */
     public function having(string $condition)
@@ -302,7 +303,7 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Group By string
      *
-     * @param string $group
+     * @param  string $group
      * @return void
      */
     public function groupBy(string $group)
@@ -313,7 +314,7 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Group By arraw
      *
-     * @param [type] ...$groups
+     * @param  [type] ...$groups
      * @return void
      */
     public function groupByRaw(...$groups)
@@ -327,10 +328,10 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param string $joinTable
-     * @param string $leftColumn
-     * @param string $condition
-     * @param string $rightColumn
+     * @param  string $joinTable
+     * @param  string $leftColumn
+     * @param  string $condition
+     * @param  string $rightColumn
      * @return self
      */
     public function join(string $joinTable, string $leftColumn, string $condition, string $rightColumn)
@@ -342,10 +343,10 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param string $joinTable
-     * @param string $leftColumn
-     * @param string $condition
-     * @param string $rightColumn
+     * @param  string $joinTable
+     * @param  string $leftColumn
+     * @param  string $condition
+     * @param  string $rightColumn
      * @return void
      */
     public function leftjoin(string $joinTable, string $leftColumn, string $condition, string $rightColumn)
@@ -357,10 +358,10 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param string $joinTable
-     * @param string $leftColumn
-     * @param string $condition
-     * @param string $rightColumn
+     * @param  string $joinTable
+     * @param  string $leftColumn
+     * @param  string $condition
+     * @param  string $rightColumn
      * @return void
      */
     public function rightjoin(string $joinTable, string $leftColumn, string $condition, string $rightColumn)
@@ -373,7 +374,7 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param string $unionSql
+     * @param  string $unionSql
      * @return void
      */
     public function union(string $unionSql)
@@ -385,7 +386,7 @@ class CommonSelectBuilder implements BuilderInterface
     /**
      * Undocumented function
      *
-     * @param string $unionSql
+     * @param  string $unionSql
      * @return void
      */
     public function unionAll(string $unionSql)

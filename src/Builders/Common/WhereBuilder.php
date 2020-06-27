@@ -3,8 +3,8 @@
  * @author    Mohammad Emran <memran.dhk@gmail.com>
  * @copyright 2018
  *
- * @see      https://www.github.com/memran
- * @see      http://www.memran.me
+ * @see https://www.github.com/memran
+ * @see http://www.memran.me
  **/
 
 namespace MarwaDB\Builders\Common;
@@ -28,13 +28,13 @@ trait WhereBuilder
      */
     protected $_where;
     /**
-    * Undocumented function
-    *
-    * @param [type] $column
-    * @param [type] $condtion
-    * @param [type] $value
-    * @return void
-    */
+     * Undocumented function
+     *
+     * @param  [type] $column
+     * @param  [type] $condtion
+     * @param  [type] $value
+     * @return void
+     */
     public function where(string $column, $condition, $value)
     {
         $this->_where = new Where();
@@ -43,9 +43,9 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param [type] $column
-     * @param [type] $condtion
-     * @param [type] $value
+     * @param  [type] $column
+     * @param  [type] $condtion
+     * @param  [type] $value
      * @return void
      */
     public function orWhere(string $column, $condition, $value)
@@ -57,9 +57,9 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param [type] $column
-     * @param [type] $condtion
-     * @param [type] $value
+     * @param  [type] $column
+     * @param  [type] $condtion
+     * @param  [type] $value
      * @return void
      */
     public function andWhere(string $column, $condition, $value)
@@ -71,9 +71,9 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param [type] $column
-     * @param [type] $condition
-     * @param [type] $value
+     * @param  [type] $column
+     * @param  [type] $condition
+     * @param  [type] $value
      * @return void
      */
     public function subOrWhere(string $column, $condition, $value)
@@ -86,9 +86,9 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param [type] $column
-     * @param [type] $condition
-     * @param [type] $value
+     * @param  [type] $column
+     * @param  [type] $condition
+     * @param  [type] $value
      * @return void
      */
     public function subAndWhere(string $column, $condition, $value)
@@ -101,9 +101,9 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param string $column
-     * @param string $value1
-     * @param string $value2
+     * @param  string $column
+     * @param  string $value1
+     * @param  string $value2
      * @return void
      */
     public function whereBetween(string $column, $value1, $value2)
@@ -115,9 +115,9 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param string $column
-     * @param string $value1
-     * @param string $value2
+     * @param  string $column
+     * @param  string $value1
+     * @param  string $value2
      * @return void
      */
     public function orWhereBetween(string $column, $value1, $value2)
@@ -130,9 +130,9 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param string $column
-     * @param string $value1
-     * @param string $value2
+     * @param  string $column
+     * @param  string $value1
+     * @param  string $value2
      * @return void
      */
     public function whereNotBetween(string $column, $value1, $value2)
@@ -144,9 +144,9 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param string $column
-     * @param string $value1
-     * @param string $value2
+     * @param  string $column
+     * @param  string $value1
+     * @param  string $value2
      * @return void
      */
     public function orWhereNotBetween(string $column, $value1, $value2)
@@ -159,8 +159,8 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param string $column
-     * @param array $values
+     * @param  string $column
+     * @param  array  $values
      * @return void
      */
     public function whereIn(string $column, array $values)
@@ -172,8 +172,8 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param string $column
-     * @param array $values
+     * @param  string $column
+     * @param  array  $values
      * @return void
      */
     public function orWhereIn(string $column, array $values)
@@ -187,8 +187,8 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param string $column
-     * @param array $values
+     * @param  string $column
+     * @param  array  $values
      * @return void
      */
     public function whereNotIn(string $column, array $values)
@@ -200,8 +200,8 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param string $column
-     * @param array $values
+     * @param  string $column
+     * @param  array  $values
      * @return void
      */
     public function orWhereNotIn(string $column, array $values)
@@ -214,7 +214,7 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param string $column
+     * @param  string $column
      * @return void
      */
     public function whereNull(string $column)
@@ -226,7 +226,7 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param string $column
+     * @param  string $column
      * @return void
      */
     public function whereNotNull(string $column)
@@ -238,7 +238,7 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param string $column
+     * @param  string $column
      * @return void
      */
     public function OrWhereNull(string $column)
@@ -251,7 +251,7 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param string $column
+     * @param  string $column
      * @return void
      */
     public function OrWhereNotNull(string $column)
@@ -264,8 +264,8 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param string $column
-     * @param [type] $value
+     * @param  string $column
+     * @param  [type] $value
      * @return void
      */
     public function whereDate(string $column, $value)
@@ -277,8 +277,8 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param string $column
-     * @param [type] $value
+     * @param  string $column
+     * @param  [type] $value
      * @return void
      */
     public function whereDay(string $column, $value)
@@ -290,8 +290,8 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param string $column
-     * @param [type] $value
+     * @param  string $column
+     * @param  [type] $value
      * @return void
      */
     public function whereYear(string $column, $value)
@@ -303,8 +303,8 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param string $column
-     * @param [type] $value
+     * @param  string $column
+     * @param  [type] $value
      * @return void
      */
     public function whereMonth(string $column, $value)
@@ -316,8 +316,8 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param string $column
-     * @param [type] $value
+     * @param  string $column
+     * @param  [type] $value
      * @return void
      */
     public function whereTime(string $column, $value)
@@ -329,7 +329,7 @@ trait WhereBuilder
     /**
      * Undocumented function
      *
-     * @param [type] $callable_value
+     * @param  [type] $callable_value
      * @return void
      */
     public function whereExists($callable_value)

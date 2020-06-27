@@ -1,6 +1,6 @@
 {
   "name": "memran/marwadb",
-  "description": "PHP Mysql Database Library",
+  "description": "PHP PDO Mysql Database Library",
   "authors": [
     {
       "name": "Mohammad Emran",
@@ -23,6 +23,11 @@
   },
   "require-dev": {
     "symfony/var-dumper": "4.4.x-dev",
+    "squizlabs/php_codesniffer": "^3.3",
+    "phpstan/phpstan": "^0.10.3",
     "phpunit/phpunit": "8"
+  },
+  "scripts": {
+    "analyze": "vendor/bin/phpstan analyse -l 4 --no-progress src"
   }
 }

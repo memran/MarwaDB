@@ -3,8 +3,8 @@
  * @author    Mohammad Emran <memran.dhk@gmail.com>
  * @copyright 2018
  *
- * @see      https://www.github.com/memran
- * @see      http://www.memran.me
+ * @see https://www.github.com/memran
+ * @see http://www.memran.me
  **/
 namespace MarwaDB\Builders\Common\Sql;
 
@@ -34,9 +34,9 @@ class Where
     /**
      * Undocumented function
      *
-     * @param [type] $column
-     * @param [type] $condtion
-     * @param [type] $value
+     * @param  [type] $column
+     * @param  [type] $condtion
+     * @param  [type] $value
      * @return void
      */
     public function addWhere($column, $condition, $value)
@@ -46,9 +46,9 @@ class Where
     /**
      * Undocumented function
      *
-     * @param [type] $column
-     * @param [type] $condtion
-     * @param [type] $value
+     * @param  [type] $column
+     * @param  [type] $condtion
+     * @param  [type] $value
      * @return void
      */
     public function addOrWhere($column, $condition, $value)
@@ -62,9 +62,9 @@ class Where
     /**
      * Undocumented function
      *
-     * @param [type] $column
-     * @param [type] $condtion
-     * @param [type] $value
+     * @param  [type] $column
+     * @param  [type] $condtion
+     * @param  [type] $value
      * @return void
      */
     public function addAndWhere($column, $condition, $value)
@@ -78,9 +78,9 @@ class Where
     /**
      * Undocumented function
      *
-     * @param [type] $column
-     * @param [type] $condition
-     * @param [type] $value
+     * @param  [type] $column
+     * @param  [type] $condition
+     * @param  [type] $value
      * @return void
      */
     public function addSubWhere(string $column, string $condition, $value)
@@ -94,7 +94,7 @@ class Where
     /**
      * Undocumented function
      *
-     * @param string $type
+     * @param  string $type
      * @return void
      */
     public function setSubWhereType(string $type)
@@ -124,9 +124,9 @@ class Where
     /**
      * Undocumented function
      *
-     * @param [type] $column
-     * @param [type] $value1
-     * @param [type] $value2
+     * @param  [type] $column
+     * @param  [type] $value1
+     * @param  [type] $value2
      * @return void
      */
     public function addWhereBetween($column, $value1, $value2)
@@ -137,9 +137,9 @@ class Where
     /**
      * Undocumented function
      *
-     * @param [type] $column
-     * @param [type] $value1
-     * @param [type] $value2
+     * @param  [type] $column
+     * @param  [type] $value1
+     * @param  [type] $value2
      * @return void
      */
     public function addOrWhereBetween($column, $value1, $value2)
@@ -150,9 +150,9 @@ class Where
     /**
      * 'Undocumented function'
      *
-     * @param [type] $column
-     * @param [type] $value1
-     * @param [type] $value2
+     * @param  [type] $column
+     * @param  [type] $value1
+     * @param  [type] $value2
      * @return void
      */
     public function addWhereNotBetween($column, $value1, $value2)
@@ -163,9 +163,9 @@ class Where
     /**
      * Undocumented function
      *
-     * @param [type] $column
-     * @param [type] $value1
-     * @param [type] $value2
+     * @param  [type] $column
+     * @param  [type] $value1
+     * @param  [type] $value2
      * @return void
      */
     public function addOrWhereNotBetween($column, $value1, $value2)
@@ -176,8 +176,8 @@ class Where
     /**
      * Undocumented function
      *
-     * @param [type] $column
-     * @param [type] $values
+     * @param  [type] $column
+     * @param  [type] $values
      * @return void
      */
     public function addWhereIn($column, $values)
@@ -189,8 +189,8 @@ class Where
     /**
      * Undocumented function
      *
-     * @param [type] $column
-     * @param [type] $values
+     * @param  [type] $column
+     * @param  [type] $values
      * @return void
      */
     public function addWhereNotIn($column, $values)
@@ -201,12 +201,12 @@ class Where
     }
 
     /**
-    * Undocumented function
-    *
-    * @param [type] $column
-    * @param [type] $values
-    * @return void
-    */
+     * Undocumented function
+     *
+     * @param  [type] $column
+     * @param  [type] $values
+     * @return void
+     */
     public function addOrWhereIn($column, $values)
     {
         $datas = implode(',', $values);
@@ -215,8 +215,8 @@ class Where
     /**
      * Undocumented function
      *
-     * @param [type] $column
-     * @param [type] $values
+     * @param  [type] $column
+     * @param  [type] $values
      * @return void
      */
     public function addOrWhereNotIn($column, $values)
@@ -228,7 +228,7 @@ class Where
     /**
      * Undocumented function
      *
-     * @param [type] $column
+     * @param  [type] $column
      * @return void
      */
     public function addWhereNull($column)
@@ -239,7 +239,7 @@ class Where
     /**
      * Undocumented function
      *
-     * @param [type] $column
+     * @param  [type] $column
      * @return void
      */
     public function addWhereNotNull($column)
@@ -250,7 +250,7 @@ class Where
     /**
      * Undocumented function
      *
-     * @param [type] $column
+     * @param  [type] $column
      * @return void
      */
     public function addOrWhereNull($column)
@@ -261,7 +261,7 @@ class Where
     /**
      * Undocumented function
      *
-     * @param [type] $column
+     * @param  [type] $column
      * @return void
      */
     public function addOrWhereNotNull($column)

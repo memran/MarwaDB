@@ -3,8 +3,8 @@
  * @author    Mohammad Emran <memran.dhk@gmail.com>
  * @copyright 2018
  *
- * @see      https://www.github.com/memran
- * @see      http://www.memran.me
+ * @see https://www.github.com/memran
+ * @see http://www.memran.me
  **/
 namespace MarwaDB\Builders\Common\Sql;
 
@@ -29,7 +29,7 @@ class Update
     /**
      * set table name
      *
-     * @param string $name
+     * @param  string $name
      * @return void
      */
     public function setTable(string $name)
@@ -49,7 +49,7 @@ class Update
     /**
      * Undocumented function
      *
-     * @param array $data
+     * @param  array $data
      * @return void
      */
     public function addData(array $data) : void
@@ -61,7 +61,7 @@ class Update
     /**
      * Undocumented function
      *
-     * @param array $data
+     * @param  array $data
      * @return void
      */
     protected function addColumnValue(array $data)

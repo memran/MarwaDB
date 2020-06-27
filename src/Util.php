@@ -3,8 +3,8 @@
  * @author    Mohammad Emran <memran.dhk@gmail.com>
  * @copyright 2018
  *
- * @see      https://www.github.com/memran
- * @see      http://www.memran.me
+ * @see https://www.github.com/memran
+ * @see http://www.memran.me
  **/
 namespace MarwaDB;
 
@@ -15,8 +15,8 @@ class Util
     /**
      * Undocumented function
      *
-     * @param [type] $string
-     * @param [type] $startString
+     * @param  [type] $string
+     * @param  [type] $startString
      * @return void
      */
     public static function startsWith($string, $startString)
@@ -27,7 +27,7 @@ class Util
     /**
      * Undocumented function
      *
-     * @param [type] $a
+     * @param  [type] $a
      * @return boolean
      */
     public static function is_multi($a)
