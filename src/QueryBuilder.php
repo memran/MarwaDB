@@ -144,9 +144,19 @@
 			}
 			//build sql query
 			$director->buildQuery();
-			
+			$this->reset();
 			return $director->getSql();
 			
+		}
+		
+		/**
+		 *
+		 */
+		protected function reset()
+		{
+			$this->_methods=[];
+			$this->_data=[];
+			$this->_updateOrInsert=[];
 		}
 		
 		/**
