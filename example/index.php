@@ -34,9 +34,7 @@
     dump("Raw Sql String Echo");
     dump($db->table('users')->select(['username', 'email as user_email'])->toSql());
 
-    die();
-
-    $result=$db->connection()->rawQuery('SELECT * FROM users WHERE id = ?', [1]);
+    $result=$db->rawQuery('SELECT * FROM users WHERE id = ?', [1]);
     dump("Result with Default Connection >>> ");
     dump($result);
 
@@ -72,10 +70,14 @@
     
     $users = $db->table('users')->distinct()->get();
     dump($users);
+	
+	$users = $db->table('users')->whereIn('id',[])->get();
+	dump($users);
     //dump($factory->select(['username', 'password'])->get());
 
     $factory = new QueryBuilder($db, 'users');
     dump($factory->limit(1)->orderBy('id', 'DESC')->get());
+    
     
     $factory = new QueryBuilder($db, 'users');
     dump($factory->select(['username','password'])->distinct()->get());

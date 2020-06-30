@@ -87,8 +87,8 @@
 		}
 		
 		/**
-		 * @param $method
-		 * @param $args
+		 * @param string $method
+		 * @param mixed $args
 		 * @throws MethodNotFoundException
 		 */
 		private function execute( $method, $args )
