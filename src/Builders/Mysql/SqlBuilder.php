@@ -4,12 +4,12 @@
 	
 	use MarwaDB\Builders\AbstractQueryBuilder;
 	use MarwaDB\Builders\Common\BuilderInterface;
+	use MarwaDB\Builders\Common\BuildQueryTrait;
 	use MarwaDB\Exceptions\MethodNotFoundException;
-	use MarwaDB\Exceptions\NotFoundException;
 	use Throwable;
 	
 	class SqlBuilder extends AbstractQueryBuilder {
-		
+		use BuildQueryTrait;
 		/**
 		 * @var BuilderInterface
 		 */
@@ -51,34 +51,7 @@
 			$this->_table = $table;
 		}
 		
-		/**
-		 * @throws NotFoundException
-		 */
-		public function buildQuery()
-		{
-			$this->_builder->table($this->_table);
-			
-			if ( $this->_type === 'select' )
-			{
-				$this->buildSelectQuery();
-			}
-			else if ( $this->_type === 'insert' )
-			{
-				$this->buildInsertQuery();
-			}
-			else if ( $this->_type === 'delete' )
-			{
-				$this->buildDeleteQuery();
-			}
-			else if ( $this->_type === 'update' )
-			{
-				$this->buildUpdateQuery();
-			}
-			else
-			{
-				throw new NotFoundException("Invalid Query Type");
-			}
-		}
+		
 		
 		/**
 		 *
