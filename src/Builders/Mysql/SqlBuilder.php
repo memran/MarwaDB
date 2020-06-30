@@ -52,9 +52,9 @@
 		}
 		
 		
-		
 		/**
 		 *
+		 * @throws MethodNotFoundException
 		 */
 		protected function buildSelectQuery()
 		{

@@ -15,34 +15,22 @@
 		{
 			$this->_builder->table($this->_table);
 			
-			if ( $this->_type === 'select' )
+			switch ($this->_type)
 			{
-				$this->buildSelectQuery();
-			}
-			else
-			{
-				if ( $this->_type === 'insert' )
-				{
+				case 'select':
+					$this->buildSelectQuery();
+					break;
+				case 'insert':
 					$this->buildInsertQuery();
-				}
-				else
-				{
-					if ( $this->_type === 'delete' )
-					{
-						$this->buildDeleteQuery();
-					}
-					else
-					{
-						if ( $this->_type === 'update' )
-						{
-							$this->buildUpdateQuery();
-						}
-						else
-						{
-							throw new NotFoundException("Invalid Query Type");
-						}
-					}
-				}
+					break;
+				case 'delete':
+					$this->buildDeleteQuery();
+					break;
+				case 'update':
+					$this->buildUpdateQuery();
+					break;
+				default:
+					throw new NotFoundException("Invalid Query Type {$this->_type}");
 			}
 		}
 	}
