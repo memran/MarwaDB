@@ -125,7 +125,7 @@
 					call_user_func_array([$this->_builder, $method], $args);
 				} catch ( Throwable $th )
 				{
-					throw new MethodNotFoundException("Error Processing Method", 1);
+					throw new MethodNotFoundException("Error Processing Method Called : {$method}", 1);
 				}
 			}
 		}
