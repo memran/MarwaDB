@@ -2,9 +2,11 @@
 	
 	namespace MarwaDB\Builders\Mysql;
 	
+	use Exception;
 	use MarwaDB\Builders\AbstractQueryBuilder;
 	use MarwaDB\Builders\Common\BuilderInterface;
 	use MarwaDB\Builders\Common\BuildQueryTrait;
+	use MarwaDB\Connections\Exceptions\InvalidException;
 	use MarwaDB\Exceptions\MethodNotFoundException;
 	use Throwable;
 	
@@ -85,8 +87,8 @@
 		}
 		
 		/**
-		 * @param string $method
-		 * @param mixed $args
+		 * @param $method
+		 * @param $args
 		 * @throws MethodNotFoundException
 		 */
 		private function execute( $method, $args )
@@ -98,8 +100,12 @@
 					call_user_func_array([$this->_builder, $method], $args);
 				} catch ( Throwable $th )
 				{
-					throw new MethodNotFoundException("Error Processing Method Called : {$method}", 1);
+					throw  new Exception($th);
 				}
+			}
+			else
+			{
+				throw new MethodNotFoundException("Error Processing Method Called : {$method}", 1);
 			}
 		}
 		

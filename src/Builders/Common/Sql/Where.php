@@ -133,9 +133,9 @@
 		 */
 		public function addWhereIn( $column, $values )
 		{
-			$datas = implode(',', $values);
+			$data = implode(',', $values);
 			//WHERE column_name IN (value1,value2);
-			$this->_whereSql = "WHERE {$column} IN ({$datas})";
+			$this->_whereSql = "WHERE {$column} IN ({$data})";
 		}
 		
 		/**
