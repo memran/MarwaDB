@@ -20,8 +20,14 @@
 		 */
 		public function where( string $column, $condition, $value )
 		{
-			$this->_where = new Where();
-			$this->_where->addWhere($column, $condition, $value);
+			if(isset($this->_where))
+			{
+				$this->_where->addAndWhere($column, $condition, $value);
+			}
+			else{
+				$this->_where = new Where();
+				$this->_where->addWhere($column, $condition, $value);
+			}
 		}
 		
 		/**
