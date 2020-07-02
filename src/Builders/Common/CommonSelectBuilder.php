@@ -109,13 +109,14 @@
 		
 		/**
 		 * @param string $column
+		 * @param string $alias
 		 * @throws Exception
 		 */
-		public function count( string $column = "*" )
+		public function count( string $column = "*" , string $alias='total')
 		{
 			if ( !empty($column) )
 			{
-				$this->_select->addAggregateColumn("COUNT($column)");
+				$this->_select->addAggregateColumn("COUNT($column) AS {$alias}");
 			}
 		}
 		
