@@ -346,7 +346,9 @@
 		 */
 		public function __call( $method, $args )
 		{
-			$this->_methods[ $method ] = $args;
+			//$this->_methods[ $method ] = $args;
+			$temp[$method]=$args;
+			array_push($this->_methods,$temp);
 			
 			return $this;
 		}

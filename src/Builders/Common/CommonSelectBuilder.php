@@ -411,21 +411,21 @@
 					$this->_select->getFrom()
 				);
 			//if inner join called
-			if ( !empty($this->_innerJoin) )
+			if ( isset($this->_innerJoin) )
 			{
 				$this->__sqlString .= ' ' . $this->_innerJoin->getJoins();
 			}
 			//if left join called
-			if ( !empty($this->_leftJoin) )
+			if ( isset($this->_leftJoin) )
 			{
 				$this->__sqlString .= ' ' . $this->_leftJoin->getJoins();
 			}
 			//if rightjoin called
-			if ( !empty($this->_rightJoin) )
+			if ( isset($this->_rightJoin) )
 			{
 				$this->__sqlString .= ' ' . $this->_rightJoin->getJoins();
 			}
-			if ( !empty($this->_where) )
+			if ( isset($this->_where) )
 			{
 				$this->__sqlString .= ' ' . $this->_where->getWhere();
 			}

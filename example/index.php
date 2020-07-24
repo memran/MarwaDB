@@ -18,6 +18,13 @@
     dump("Total Rows Returned >>> ".$db->rows());
     
     dump($db->status());
+	
+    dump($db->table('users')->where('username','=','admin')->where('active','=','1')->get());
+
+	
+	$result=$db->table('users')->count()->get();
+    dump(reset($result)['total']);
+    die;
     
     $result = $db->rawQuery('SELECT * FROM users');
     dump($result);
@@ -27,9 +34,11 @@
 
     dump("Result with Specific Connection Name >>> ");
     dump($result);
-
+	
+	
     dump("Query Log Print");
     dump($db->getQueryLog());
+    die;
     
     dump("Raw Sql String Echo");
     dump($db->table('users')->select(['username', 'email as user_email'])->toSql());
