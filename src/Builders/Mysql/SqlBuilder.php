@@ -132,7 +132,9 @@
 			{
 				foreach ( $this->getMethods() as $key => $value )
 				{
-					$this->execute($key, $value);
+					$method = array_keys($value)[0];
+					$this->execute($method, $value[$method]);
+					//$this->execute($key, $value);
 				}
 			}
 			$this->_builder->formatSql();
@@ -148,7 +150,9 @@
 			{
 				foreach ( $this->getMethods() as $key => $value )
 				{
-					$this->execute($key, $value);
+					$method = array_keys($value)[0];
+					$this->execute($method, $value[$method]);
+					//$this->execute($key, $value);
 				}
 			}
 			
