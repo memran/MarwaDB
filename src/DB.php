@@ -183,10 +183,10 @@
 			{
 				$this->beginTrans();
 				$function_name($this);
-				$this->commit();
+				return $this->commit();
 			} catch ( Exception $e )
 			{
-				$this->rollback();
+				return $this->rollback();
 				throw new Exception('Transaction Failed');
 			}
 		}
@@ -196,7 +196,7 @@
 		 */
 		public function beginTrans()
 		{
-			$this->__conn->beginTrans();
+			return $this->__conn->beginTrans();
 		}
 		
 		/**
@@ -204,7 +204,7 @@
 		 */
 		public function commit()
 		{
-			$this->__conn->commitTrans();
+			return $this->__conn->commitTrans();
 		}
 		
 		/**
@@ -212,7 +212,7 @@
 		 */
 		public function rollback()
 		{
-			$this->__conn->rollBackTrans();
+			return $this->__conn->rollBackTrans();
 		}
 		
 		/**
