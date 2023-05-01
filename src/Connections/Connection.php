@@ -453,7 +453,13 @@
 		 */
 		public function beginTrans()
 		{
-			$this->getPdo()->beginTransaction();
+			try {
+				return $this->getPdo()->beginTransaction();
+			}
+			catch(Exceptions $e)
+			{
+				throw new ConnectionException($e);
+			}
 		}
 		
 		/**
@@ -461,7 +467,13 @@
 		 */
 		public function rollBackTrans()
 		{
-			$this->getPdo()->rollback();
+			try{
+				return $this->getPdo()->rollback();
+			}
+			catch(Exceptions $e)
+			{
+				throw new ConnectionException($e);
+			}
 		}
 		
 		/**
@@ -469,7 +481,13 @@
 		 */
 		public function commitTrans()
 		{
-			$this->getPdo()->commit();
+			try{
+				return $this->getPdo()->commit();
+			}
+				catch(Exceptions $e)
+			{
+				throw new ConnectionException($e);
+			}
 		}
 		
 		/**
